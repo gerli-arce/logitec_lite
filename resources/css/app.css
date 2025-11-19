@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LOGITEC Brand Colors */
+:root {
+  --color-primary: #0ACF83;
+  --color-primary-dark: #08b372;
+  --color-dark: #1A1A1A;
+  --color-dark-lighter: #2A2A2A;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
