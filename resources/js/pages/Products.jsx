@@ -8,9 +8,12 @@ import ProductGrid from '../components/ProductGrid'
 import Pagination from '../components/Pagination'
 import { api } from '../services/api'
 import { useSearchParams } from 'react-router-dom'
+import { useCart } from '../context/CartContext'
+import Swal from 'sweetalert2'
 
 export default function Products() {
   const [searchParams] = useSearchParams()
+  const { addToCart } = useCart()
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -204,7 +207,16 @@ export default function Products() {
   }
 
   const handleAddToCart = (product) => {
-    alert(`${product.nombre} agregado al carrito`)
+    addToCart(product, 1)
+    Swal.fire({
+      title: '¡Agregado!',
+      text: `${product.nombre} agregado al carrito`,
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false,
+      position: 'top-end',
+      toast: true
+    })
   }
 
   const handleWhatsApp = (product) => {

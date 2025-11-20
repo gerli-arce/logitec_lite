@@ -32,6 +32,7 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     setIsLoading(true)
     try {
+      await api.getCsrfCookie() // Fetch CSRF cookie before login
       const response = await api.login(email, password)
       const { token: newToken, user: userData } = response
       setToken(newToken)

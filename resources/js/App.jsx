@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { CartProvider } from './context/CartContext'; // Import CartProvider
 import Home from './pages/Home';
 import Products from './pages/Products';
 import Blog from './pages/Blog';
@@ -16,28 +17,32 @@ import AdminBlog from './pages/admin/Blog';
 import AdminSettings from './pages/admin/Settings';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProductDetail from './pages/ProductDetail';
+import Cart from './pages/Cart'; // Import Cart page
 
 export default function App() {
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/productos" element={<Products />} />
-      <Route path="/producto/:id" element={<ProductDetail />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:id" element={<BlogDetail />} />
-      <Route path="/nosotros" element={<About />} />
-      <Route path="/contacto" element={<Contact />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
-      
-      {/* Admin routes */}
-      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-      <Route path="/admin/productos" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-      <Route path="/admin/categorias" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
-      <Route path="/admin/subcategorias" element={<ProtectedRoute><AdminSubcategories /></ProtectedRoute>} />
-      <Route path="/admin/perfil" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
-      <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
-      <Route path="/admin/configuracion" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
-    </Routes>
+    <CartProvider> {/* Wrap app in CartProvider */}
+      <Routes>
+        {/* Public routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/productos" element={<Products />} />
+        <Route path="/producto/:id" element={<ProductDetail />} />
+        <Route path="/carrito" element={<Cart />} /> {/* Add cart route */}
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
+        <Route path="/nosotros" element={<About />} />
+        <Route path="/contacto" element={<Contact />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/productos" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+        <Route path="/admin/categorias" element={<ProtectedRoute><AdminCategories /></ProtectedRoute>} />
+        <Route path="/admin/subcategorias" element={<ProtectedRoute><AdminSubcategories /></ProtectedRoute>} />
+        <Route path="/admin/perfil" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
+        <Route path="/admin/blog" element={<ProtectedRoute><AdminBlog /></ProtectedRoute>} />
+        <Route path="/admin/configuracion" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />
+      </Routes>
+    </CartProvider>
   );
 }

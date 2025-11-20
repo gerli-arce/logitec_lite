@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ShoppingCart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react'
+import Swal from 'sweetalert2'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import { api } from '../services/api'
+import { useCart } from '../context/CartContext' // Import useCart
 
 export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { addToCart } = useCart() // Get addToCart function
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -45,8 +48,16 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality
-    alert(`Agregado ${quantity} ${product.nombre} al carrito`)
+    addToCart(product, quantity)
+    Swal.fire({
+      title: '¡Agregado!',
+      text: `Has agregado ${quantity} ${product.nombre} al carrito.`,
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false,
+      position: 'top-end',
+      toast: true
+    })
   }
 
   const handleWhatsAppQuote = () => {

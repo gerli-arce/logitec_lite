@@ -1,9 +1,10 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu, X, ChevronDown, ChevronRight, User } from 'lucide-react'
+import { Menu, X, ChevronDown, ChevronRight, User, ShoppingCart } from 'lucide-react'
 import { api } from '../services/api'
 import SearchAutocomplete from './SearchAutocomplete'
+import { useCart } from '../context/CartContext'
 
 export default function Header({ onSelectCategory }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -13,6 +14,7 @@ export default function Header({ onSelectCategory }) {
   const [loading, setLoading] = useState(true)
   const megaMenuRef = useRef(null)
   const navigate = useNavigate()
+  const { getCartCount } = useCart()
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -181,6 +183,18 @@ export default function Header({ onSelectCategory }) {
             </Link>
 
             <Link 
+              to="/carrito" 
+              className="relative text-gray-700 hover:text-[#0ACF83] transition font-medium"
+            >
+              <ShoppingCart size={24} />
+              {getCartCount() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {getCartCount()}
+                </span>
+              )}
+            </Link>
+
+            <Link 
               to="/admin/login" 
               className="flex items-center space-x-2 text-gray-700 hover:text-[#0ACF83] transition font-medium"
             >
@@ -277,6 +291,22 @@ export default function Header({ onSelectCategory }) {
                 className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
               >
                 Contacto
+              </Link>
+
+              <Link 
+                to="/carrito" 
+                onClick={() => setIsOpen(false)}
+                className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
+              >
+                <div className="relative">
+                  <ShoppingCart size={20} />
+                  {getCartCount() > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                      {getCartCount()}
+                    </span>
+                  )}
+                </div>
+                <span>Carrito de Compras</span>
               </Link>
 
               <Link 
