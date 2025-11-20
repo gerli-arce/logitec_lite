@@ -12,6 +12,24 @@ class PostController extends Controller
         return response()->json(Post::where('activo', true)->orderBy('created_at', 'desc')->paginate(10));
     }
 
+    public function indexAdmin(Request $request)
+    {
+        $user = auth()->user();
+        if (!$user || !$user->isAdmin()) {
+             return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $query = Post::query();
+
+        if ($request->filled('search')) {
+            $query->where('titulo', 'like', '%' . $request->search . '%');
+        }
+
+        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($posts);
+    }
+
     public function store(Request $request)
     {
         $this->authorize('isAdmin', auth()->user());

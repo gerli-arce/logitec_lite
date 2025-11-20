@@ -28,21 +28,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     
     // Admin - Categorías
+    Route::get('/admin/categorias', [CategoriaController::class, 'indexAdmin']); // Added admin route
     Route::post('/categorias', [CategoriaController::class, 'store']);
     Route::put('/categorias/{id}', [CategoriaController::class, 'update']);
     Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy']);
     
     // Admin - Subcategorías
+    Route::get('/admin/subcategorias', [SubcategoriaController::class, 'indexAdmin']); // Added admin route
     Route::post('/subcategorias', [SubcategoriaController::class, 'store']);
     Route::put('/subcategorias/{id}', [SubcategoriaController::class, 'update']);
     Route::delete('/subcategorias/{id}', [SubcategoriaController::class, 'destroy']);
     
     // Admin - Productos
+    Route::get('/admin/productos', [ProductoController::class, 'indexAdmin']); // Added admin specific route for fetching products
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
     
     // Admin - Posts
+    Route::get('/admin/posts', [PostController::class, 'indexAdmin']); // Added admin route for posts
     Route::post('/posts', [PostController::class, 'store']);
     Route::put('/posts/{id}', [PostController::class, 'update']);
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);

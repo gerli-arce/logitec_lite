@@ -12,6 +12,27 @@ class SubcategoriaController extends Controller
         return response()->json(Subcategoria::where('activo', true)->with('categoria')->get());
     }
 
+    public function indexAdmin(Request $request)
+    {
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $query = Subcategoria::with('categoria');
+
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('categoria_id')) {
+            $query->where('categoria_id', $request->categoria_id);
+        }
+
+        $subcategorias = $query->orderBy('id', 'desc')->paginate(10);
+
+        return response()->json($subcategorias);
+    }
+
     public function store(Request $request)
     {
         $this->authorize('isAdmin', auth()->user());

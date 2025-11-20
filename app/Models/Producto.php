@@ -24,6 +24,7 @@ class Producto extends Model
         'imagenes_adicionales',
         'activo',
         'destacado',
+        'promocion', // Ensure this is here
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class Producto extends Model
         'especificaciones' => 'array',
         'activo' => 'boolean',
         'destacado' => 'boolean',
+        'promocion' => 'boolean', // Added casting for promocion
     ];
 
     public function categoria(): BelongsTo

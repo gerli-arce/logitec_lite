@@ -1,6 +1,13 @@
 import axios from "axios"
 
 const API_URL = "/api"
+export const STORAGE_URL = "http://127.0.0.1:8000"
+
+export const getImageUrl = (path) => {
+  if (!path) return "/placeholder.svg"
+  if (path.startsWith("http") || path.startsWith("data:")) return path
+  return `${STORAGE_URL}${path}`
+}
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -56,6 +63,8 @@ export const api = {
   // Categories
   getCategories: () => apiClient.get("/categorias").then((res) => res.data),
 
+  getAdminCategories: (params) => apiClient.get("/admin/categorias", { params }).then((res) => res.data), // Added admin method
+
   createCategory: (data) => apiClient.post("/categorias", data).then((res) => res.data),
 
   updateCategory: (id, data) => apiClient.put(`/categorias/${id}`, data).then((res) => res.data),
@@ -66,6 +75,8 @@ export const api = {
   getSubcategories: (categoriaId) =>
     apiClient.get("/subcategorias", { params: { categoria_id: categoriaId } }).then((res) => res.data),
 
+  getAdminSubcategories: (params) => apiClient.get("/admin/subcategorias", { params }).then((res) => res.data), // Added admin method
+
   createSubcategory: (data) => apiClient.post("/subcategorias", data).then((res) => res.data),
 
   updateSubcategory: (id, data) => apiClient.put(`/subcategorias/${id}`, data).then((res) => res.data),
@@ -75,16 +86,33 @@ export const api = {
   // Products
   getProducts: (params) => apiClient.get("/productos", { params }).then((res) => res.data),
 
+  getAdminProducts: (params) => apiClient.get("/admin/productos", { params }).then((res) => res.data),
+
   getProduct: (id) => apiClient.get(`/productos/${id}`).then((res) => res.data),
 
-  createProduct: (data) => apiClient.post("/productos", data).then((res) => res.data),
+  createProduct: (data) => {
+    const config = data instanceof FormData ? { headers: { "Content-Type": undefined } } : {}
+    return apiClient.post("/productos", data, config).then((res) => res.data)
+  },
 
-  updateProduct: (id, data) => apiClient.put(`/productos/${id}`, data).then((res) => res.data),
+  updateProduct: (id, data) => {
+    if (data instanceof FormData) {
+      data.append("_method", "PUT")
+      return apiClient
+        .post(`/productos/${id}`, data, {
+          headers: { "Content-Type": undefined },
+        })
+        .then((res) => res.data)
+    }
+    return apiClient.put(`/productos/${id}`, data).then((res) => res.data)
+  },
 
   deleteProduct: (id) => apiClient.delete(`/productos/${id}`).then((res) => res.data),
 
   // Blog Posts
   getPosts: () => apiClient.get("/posts").then((res) => res.data),
+
+  getAdminPosts: (params) => apiClient.get("/admin/posts", { params }).then((res) => res.data), // Added getAdminPosts method
 
   getPost: (id) => apiClient.get(`/posts/${id}`).then((res) => res.data),
 

@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { ShoppingCart, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react'
-import Swal from 'sweetalert2'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import { api } from '../services/api'
-import { useCart } from '../context/CartContext' // Import useCart
+"use client"
+
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { ShoppingCart, MessageCircle } from "lucide-react"
+import Swal from "sweetalert2"
+import Header from "../components/Header"
+import Footer from "../components/Footer"
+import { api, getImageUrl } from "../services/api"
+import { useCart } from "../context/CartContext" // Import useCart
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -25,23 +27,21 @@ export default function ProductDetail() {
     setLoading(true)
     try {
       const productData = await api.getProduct(id)
-      console.log('[v0] Product data received:', productData)
+      console.log("[v0] Product data received:", productData)
       setProduct(productData)
-      
+
       // Fetch related products from same category
       if (productData?.categoria_id) {
-        const related = await api.getProducts({ 
+        const related = await api.getProducts({
           categoria_id: productData.categoria_id,
-          per_page: 6 
+          per_page: 6,
         })
         const relatedList = related.data || related
-        const relatedFiltered = Array.isArray(relatedList) 
-          ? relatedList.filter(p => p.id !== productData.id)
-          : []
+        const relatedFiltered = Array.isArray(relatedList) ? relatedList.filter((p) => p.id !== productData.id) : []
         setRelatedProducts(relatedFiltered.slice(0, 6))
       }
     } catch (error) {
-      console.error('[v0] Error fetching product:', error)
+      console.error("[v0] Error fetching product:", error)
     } finally {
       setLoading(false)
     }
@@ -50,45 +50,45 @@ export default function ProductDetail() {
   const handleAddToCart = () => {
     addToCart(product, quantity)
     Swal.fire({
-      title: '¡Agregado!',
+      title: "¡Agregado!",
       text: `Has agregado ${quantity} ${product.nombre} al carrito.`,
-      icon: 'success',
+      icon: "success",
       timer: 1500,
       showConfirmButton: false,
-      position: 'top-end',
-      toast: true
+      position: "top-end",
+      toast: true,
     })
   }
 
   const handleWhatsAppQuote = () => {
-    const whatsappNumber = '51999999999' // TODO: Get from settings
+    const whatsappNumber = "51999999999" // TODO: Get from settings
     const price = getDisplayPrice()
     const message = `Hola, estoy interesado en: ${product.nombre} - S/ ${price}`
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank')
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank")
   }
 
   const getDisplayPrice = () => {
-    if (!product) return '0.00'
+    if (!product) return "0.00"
     const price = product.precio_oferta || product.precio
-    const numPrice = parseFloat(price)
-    return !isNaN(numPrice) ? numPrice.toFixed(2) : '0.00'
+    const numPrice = Number.parseFloat(price)
+    return !isNaN(numPrice) ? numPrice.toFixed(2) : "0.00"
   }
 
   const getOriginalPrice = () => {
     if (!product || !product.precio) return null
-    const numPrice = parseFloat(product.precio)
+    const numPrice = Number.parseFloat(product.precio)
     return !isNaN(numPrice) ? numPrice.toFixed(2) : null
   }
 
   const hasStock = () => {
     if (!product) return false
-    const stock = parseInt(product.stock)
+    const stock = Number.parseInt(product.stock)
     return !isNaN(stock) && stock > 0
   }
 
   const getStock = () => {
     if (!product) return 0
-    const stock = parseInt(product.stock)
+    const stock = Number.parseInt(product.stock)
     return !isNaN(stock) ? stock : 0
   }
 
@@ -110,10 +110,7 @@ export default function ProductDetail() {
         <Header />
         <div className="container mx-auto px-4 py-12 text-center flex-grow">
           <h2 className="text-2xl font-bold text-gray-800">Producto no encontrado</h2>
-          <button 
-            onClick={() => navigate('/productos')}
-            className="mt-4 text-[#0ACF83] hover:underline"
-          >
+          <button onClick={() => navigate("/productos")} className="mt-4 text-[#0ACF83] hover:underline">
             Volver a productos
           </button>
         </div>
@@ -122,16 +119,17 @@ export default function ProductDetail() {
     )
   }
 
-  const images = product.imagenes && Array.isArray(product.imagenes) && product.imagenes.length > 0
-    ? product.imagenes
-    : product.imagen 
-      ? [product.imagen]
-      : ['/placeholder.svg?height=500&width=500']
+  const images =
+    product.imagenes && Array.isArray(product.imagenes) && product.imagenes.length > 0
+      ? product.imagenes
+      : product.imagen_principal // Changed from product.imagen to product.imagen_principal to match DB
+        ? [product.imagen_principal]
+        : ["/placeholder.svg?height=500&width=500"]
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      
+
       <div className="container mx-auto px-4 py-8 flex-grow">
         {/* Product Detail Section */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
@@ -146,11 +144,11 @@ export default function ProductDetail() {
                       key={idx}
                       onClick={() => setSelectedImage(idx)}
                       className={`w-20 h-20 flex-shrink-0 border-2 rounded-lg overflow-hidden transition-all ${
-                        selectedImage === idx ? 'border-[#0ACF83]' : 'border-gray-200'
+                        selectedImage === idx ? "border-[#0ACF83]" : "border-gray-200"
                       }`}
                     >
-                      <img 
-                        src={img || '/placeholder.svg?height=80&width=80'} 
+                      <img
+                        src={getImageUrl(img) || "/placeholder.svg?height=80&width=80"} // Used getImageUrl for thumbnails
                         alt={`${product.nombre} ${idx + 1}`}
                         className="w-full h-full object-contain p-1"
                       />
@@ -161,8 +159,8 @@ export default function ProductDetail() {
 
               {/* Main Image */}
               <div className="relative bg-white border border-gray-200 rounded-lg p-8 aspect-square flex items-center justify-center">
-                <img 
-                  src={images[selectedImage] || '/placeholder.svg?height=500&width=500'} 
+                <img
+                  src={getImageUrl(images[selectedImage]) || "/placeholder.svg?height=500&width=500"} // Used getImageUrl for main image
                   alt={product.nombre}
                   className="max-w-full max-h-full object-contain"
                 />
@@ -178,16 +176,12 @@ export default function ProductDetail() {
             <div className="space-y-6">
               <div>
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-                  {product.nombre || 'Producto sin nombre'}
+                  {product.nombre || "Producto sin nombre"}
                 </h1>
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-gray-900">
-                    S/ {getDisplayPrice()}
-                  </span>
+                  <span className="text-3xl font-bold text-gray-900">S/ {getDisplayPrice()}</span>
                   {product.precio_oferta && getOriginalPrice() && (
-                    <span className="text-lg text-gray-400 line-through">
-                      S/ {getOriginalPrice()}
-                    </span>
+                    <span className="text-lg text-gray-400 line-through">S/ {getOriginalPrice()}</span>
                   )}
                 </div>
                 {hasStock() ? (
@@ -210,9 +204,7 @@ export default function ProductDetail() {
                   >
                     -
                   </button>
-                  <span className="px-6 py-2 border-x border-gray-300 min-w-[60px] text-center">
-                    {quantity}
-                  </span>
+                  <span className="px-6 py-2 border-x border-gray-300 min-w-[60px] text-center">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(getStock(), quantity + 1))}
                     className="px-4 py-2 hover:bg-gray-100 transition-colors"
@@ -246,7 +238,7 @@ export default function ProductDetail() {
               <div className="border-t border-gray-200 pt-6 space-y-2 text-sm">
                 <div className="flex gap-2">
                   <span className="text-gray-600 font-medium">Categoría:</span>
-                  <span className="text-gray-800">{product.categoria?.nombre || 'Sin categoría'}</span>
+                  <span className="text-gray-800">{product.categoria?.nombre || "Sin categoría"}</span>
                 </div>
                 {product.sku && (
                   <div className="flex gap-2">
@@ -282,7 +274,9 @@ export default function ProductDetail() {
                 {Object.entries(product.especificaciones).map(([key, value]) => (
                   <li key={key} className="flex gap-2">
                     <span className="text-[#0ACF83]">•</span>
-                    <span><strong>{key}:</strong> {value}</span>
+                    <span>
+                      <strong>{key}:</strong> {value}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -296,9 +290,9 @@ export default function ProductDetail() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Productos relacionados</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {relatedProducts.map((relatedProduct) => {
-                const relatedPrice = parseFloat(relatedProduct.precio)
-                const displayRelatedPrice = !isNaN(relatedPrice) ? relatedPrice.toFixed(2) : '0.00'
-                
+                const relatedPrice = Number.parseFloat(relatedProduct.precio)
+                const displayRelatedPrice = !isNaN(relatedPrice) ? relatedPrice.toFixed(2) : "0.00"
+
                 return (
                   <button
                     key={relatedProduct.id}
@@ -307,17 +301,13 @@ export default function ProductDetail() {
                   >
                     <div className="aspect-square bg-gray-50 rounded-lg mb-2 overflow-hidden">
                       <img
-                        src={relatedProduct.imagen || '/placeholder.svg?height=150&width=150'}
+                        src={getImageUrl(relatedProduct.imagen_principal) || "/placeholder.svg?height=150&width=150"} // Used getImageUrl for related products and fixed property name
                         alt={relatedProduct.nombre}
                         className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform"
                       />
                     </div>
-                    <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-1">
-                      {relatedProduct.nombre}
-                    </h3>
-                    <p className="text-lg font-bold text-gray-900">
-                      S/ {displayRelatedPrice}
-                    </p>
+                    <h3 className="text-sm font-medium text-gray-800 line-clamp-2 mb-1">{relatedProduct.nombre}</h3>
+                    <p className="text-lg font-bold text-gray-900">S/ {displayRelatedPrice}</p>
                   </button>
                 )
               })}

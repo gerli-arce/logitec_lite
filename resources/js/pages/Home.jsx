@@ -1,11 +1,11 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import Header from '../components/Header'
-import WhatsAppButton from '../components/WhatsAppButton'
-import Footer from '../components/Footer'
-import { api } from '../services/api'
+"use client"
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import Header from "../components/Header"
+import WhatsAppButton from "../components/WhatsAppButton"
+import Footer from "../components/Footer"
+import { api, getImageUrl } from "../services/api"
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([])
@@ -16,19 +16,19 @@ export default function Home() {
 
   const slides = [
     {
-      title: 'Ofertas en Computadoras',
-      description: 'Hasta 30% de descuento en equipos seleccionados',
-      image: '/modern-computers.jpg',
+      title: "Ofertas en Computadoras",
+      description: "Hasta 30% de descuento en equipos seleccionados",
+      image: "/modern-computers.jpg",
     },
     {
-      title: 'Nuevos Smartphones',
-      description: 'Los últimos modelos al mejor precio',
-      image: '/modern-smartphones.png',
+      title: "Nuevos Smartphones",
+      description: "Los últimos modelos al mejor precio",
+      image: "/modern-smartphones.png",
     },
     {
-      title: 'Seguridad Inteligente',
-      description: 'Cámaras de seguridad con tecnología avanzada',
-      image: '/security-cameras.png',
+      title: "Seguridad Inteligente",
+      description: "Cámaras de seguridad con tecnología avanzada",
+      image: "/security-cameras.png",
     },
   ]
 
@@ -45,17 +45,17 @@ export default function Home() {
 
   const fetchData = async () => {
     try {
-      const [productsData, postsData] = await Promise.all([
-        api.getProducts(),
+      const [featuredData, promoData, postsData] = await Promise.all([
+        api.getProducts({ destacado: 1, limit: 4 }),
+        api.getProducts({ promocion: 1, limit: 4 }),
         api.getPosts(),
       ])
-      
-      const allProducts = productsData.data || []
-      setFeaturedProducts(allProducts.filter(p => p.destacado).slice(0, 4))
-      setPromoProducts(allProducts.filter(p => p.precio_oferta).slice(0, 4))
+
+      setFeaturedProducts(featuredData.data || [])
+      setPromoProducts(promoData.data || [])
       setPosts(postsData.data?.slice(0, 3) || [])
     } catch (error) {
-      console.error('Failed to fetch data:', error)
+      console.error("Failed to fetch data:", error)
     } finally {
       setIsLoading(false)
     }
@@ -66,20 +66,31 @@ export default function Home() {
 
   const ProductCard = ({ product }) => (
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-      <div className="relative bg-gray-200 h-48 flex items-center justify-center">
-        {product.imagen ? (
-          <img src={product.imagen || "/placeholder.svg"} alt={product.nombre} className="w-full h-full object-cover" />
+      <Link
+        to={`/producto/${product.id}`}
+        className="block relative bg-gray-200 h-48 flex items-center justify-center group"
+      >
+        {product.imagen_principal ? (
+          <img
+            src={getImageUrl(product.imagen_principal) || "/placeholder.svg"}
+            alt={product.nombre}
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+          />
         ) : (
           <div className="text-gray-400">Sin imagen</div>
         )}
         {product.precio_oferta && (
-          <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+          <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold z-10">
             OFERTA
           </div>
         )}
-      </div>
+      </Link>
       <div className="p-4">
-        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 h-12">{product.nombre}</h3>
+        <Link to={`/producto/${product.id}`}>
+          <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 h-12 hover:text-[#0ACF83] transition">
+            {product.nombre}
+          </h3>
+        </Link>
         <div className="flex items-center justify-between mb-3">
           <div>
             {product.precio_oferta ? (
@@ -95,7 +106,7 @@ export default function Home() {
         <button
           onClick={() => {
             const message = `Hola, estoy interesado en: ${product.nombre} - $${product.precio_oferta || product.precio}`
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank')
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank")
           }}
           className="w-full bg-[#0ACF83] text-white px-4 py-2 rounded hover:bg-green-600 transition font-semibold"
         >
@@ -109,17 +120,21 @@ export default function Home() {
     <>
       {/* Header component at the top */}
       <Header />
-      
+
       {/* Hero Slider */}
       <section className="relative bg-[#1A1A1A] h-[500px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
+              index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
           >
-            <img src={slide.image || "/placeholder.svg"} alt={slide.title} className="w-full h-full object-cover opacity-60" />
+            <img
+              src={slide.image || "/placeholder.svg"}
+              alt={slide.title}
+              className="w-full h-full object-cover opacity-60"
+            />
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center text-white px-4">
                 <h2 className="text-5xl md:text-6xl font-bold mb-4">{slide.title}</h2>
@@ -134,7 +149,7 @@ export default function Home() {
             </div>
           </div>
         ))}
-        
+
         {/* Slider Controls */}
         <button
           onClick={prevSlide}
@@ -148,7 +163,7 @@ export default function Home() {
         >
           <ChevronRight size={24} />
         </button>
-        
+
         {/* Slider Indicators */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
           {slides.map((_, index) => (
@@ -156,7 +171,7 @@ export default function Home() {
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`w-3 h-3 rounded-full transition ${
-                index === currentSlide ? 'bg-[#0ACF83] w-8' : 'bg-white/50'
+                index === currentSlide ? "bg-[#0ACF83] w-8" : "bg-white/50"
               }`}
             />
           ))}
@@ -169,7 +184,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-bold text-[#1A1A1A]">Productos Destacados</h2>
-              <Link to="/productos" className="text-[#0ACF83] font-semibold flex items-center gap-1 hover:gap-2 transition">
+              <Link
+                to="/productos"
+                className="text-[#0ACF83] font-semibold flex items-center gap-1 hover:gap-2 transition"
+              >
                 Ver todos <ChevronRight size={20} />
               </Link>
             </div>
@@ -188,7 +206,7 @@ export default function Home() {
           <h2 className="text-4xl font-bold mb-4">Atención Directa por WhatsApp</h2>
           <p className="text-xl mb-6">Consulta con nuestros expertos y recibe asesoramiento personalizado</p>
           <button
-            onClick={() => window.open('https://wa.me/', '_blank')}
+            onClick={() => window.open("https://wa.me/", "_blank")}
             className="bg-white text-[#0ACF83] px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
           >
             Contactar Ahora
@@ -205,7 +223,10 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-[#1A1A1A]">Productos en Promoción</h2>
                 <p className="text-gray-600 mt-2">Aprovecha estas ofertas especiales</p>
               </div>
-              <Link to="/productos" className="text-[#0ACF83] font-semibold flex items-center gap-1 hover:gap-2 transition">
+              <Link
+                to="/productos"
+                className="text-[#0ACF83] font-semibold flex items-center gap-1 hover:gap-2 transition"
+              >
                 Ver todos <ChevronRight size={20} />
               </Link>
             </div>
@@ -237,7 +258,11 @@ export default function Home() {
                   <div className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
                     <div className="bg-gray-200 h-48 overflow-hidden">
                       {post.imagen ? (
-                        <img src={post.imagen || "/placeholder.svg"} alt={post.titulo} className="w-full h-full object-cover group-hover:scale-105 transition" />
+                        <img
+                          src={getImageUrl(post.imagen) || "/placeholder.svg"}
+                          alt={post.titulo}
+                          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400">Sin imagen</div>
                       )}
@@ -247,10 +272,10 @@ export default function Home() {
                         {post.titulo}
                       </h3>
                       <p className="text-gray-600 text-sm">
-                        {new Date(post.fecha_publicacion).toLocaleDateString('es-ES', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
+                        {new Date(post.fecha_publicacion).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
                         })}
                       </p>
                     </div>

@@ -12,6 +12,23 @@ class CategoriaController extends Controller
         return response()->json(Categoria::with('subcategorias')->where('activo', true)->get());
     }
 
+    public function indexAdmin(Request $request)
+    {
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $query = Categoria::query();
+
+        if ($request->filled('search')) {
+            $query->where('nombre', 'like', '%' . $request->search . '%');
+        }
+
+        $categorias = $query->orderBy('id', 'desc')->paginate(10);
+
+        return response()->json($categorias);
+    }
+
     public function store(Request $request)
     {
         $this->authorize('isAdmin', auth()->user());
