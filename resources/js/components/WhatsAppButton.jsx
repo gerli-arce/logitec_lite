@@ -1,36 +1,19 @@
-import React from 'react'
-import { MessageCircle } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { api } from '../services/api'
-
+"use client"
+import { MessageCircle } from "lucide-react"
+import { useSettings } from "../context/SettingsContext" // Import useSettings
 
 export default function WhatsAppButton({ productName }) {
-  const [whatsappNumber, setWhatsappNumber] = useState('')
-
-  useEffect(() => {
-    fetchSettings()
-  }, [])
-
-  const fetchSettings = async () => {
-    try {
-      const settings = await api.getSettings()
-      if (settings && settings.whatsapp_number) {
-        setWhatsappNumber(settings.whatsapp_number)
-      }
-    } catch (error) {
-      console.error('Failed to fetch settings:', error)
-    }
-  }
+  const { getWhatsAppNumber } = useSettings() // Use context instead of local state
 
   const handleWhatsApp = () => {
-    if (!whatsappNumber) return
+    const whatsappNumber = getWhatsAppNumber() // Get dynamic number
 
     const message = productName
       ? `Hola, soy cliente de LOGITEC y estoy interesado en: ${productName}`
-      : 'Hola, soy cliente de LOGITEC. Quisiera obtener más información.'
+      : "Hola, soy cliente de LOGITEC. Quisiera obtener más información."
 
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, '_blank')
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, "_blank")
   }
 
   return (

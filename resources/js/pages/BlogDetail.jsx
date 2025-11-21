@@ -1,10 +1,10 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Calendar, ChevronRight } from 'lucide-react'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
-import { api } from '../services/api'
+"use client"
+import { useState, useEffect } from "react"
+import { useParams, Link, useNavigate } from "react-router-dom"
+import { ArrowLeft, Calendar, ChevronRight } from "lucide-react"
+import Footer from "../components/Footer"
+import Header from "../components/Header"
+import { api, getImageUrl } from "../services/api"
 
 export default function BlogDetail() {
   const { slug } = useParams()
@@ -21,15 +21,16 @@ export default function BlogDetail() {
 
   const fetchPost = async () => {
     try {
-      const data = await api.getPosts()
-      const foundPost = data.data?.find((p) => p.slug === slug)
-      if (foundPost) {
-        setPost(foundPost)
-        const related = data.data?.filter((p) => p.id !== foundPost.id).slice(0, 3) || []
-        setRelatedPosts(related)
-      }
+      const data = await api.getPostBySlug(slug)
+      console.log("[v0] Post data received:", data) // Debug log
+      setPost(data)
+
+      // Fetch related posts
+      const allPosts = await api.getPosts()
+      const related = allPosts.data?.filter((p) => p.id !== data.id).slice(0, 3) || []
+      setRelatedPosts(related)
     } catch (error) {
-      console.error('Failed to fetch post:', error)
+      console.error("Failed to fetch post:", error)
     } finally {
       setIsLoading(false)
     }
@@ -70,18 +71,24 @@ export default function BlogDetail() {
 
         <article className="bg-white rounded-lg shadow-lg overflow-hidden mb-12">
           {post.imagen && (
-            <img src={post.imagen || "/placeholder.svg"} alt={post.titulo} className="w-full h-96 object-cover" />
+            <img
+              src={getImageUrl(post.imagen) || "/placeholder.svg"}
+              alt={post.titulo}
+              className="w-full h-96 object-cover"
+            />
           )}
 
           <div className="p-8">
             <header className="mb-8">
               <div className="flex items-center text-gray-500 mb-4">
                 <Calendar size={18} className="mr-2" />
-                {new Date(post.fecha_publicacion).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
+                {post.created_at && !isNaN(new Date(post.created_at).getTime())
+                  ? new Date(post.created_at).toLocaleDateString("es-ES", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Fecha no disponible"}
               </div>
               <h1 className="text-4xl font-bold text-[#1A1A1A]">{post.titulo}</h1>
             </header>
@@ -107,14 +114,12 @@ export default function BlogDetail() {
                     <div className="bg-gray-200 h-48 overflow-hidden">
                       {relatedPost.imagen ? (
                         <img
-                          src={relatedPost.imagen || "/placeholder.svg"}
+                          src={getImageUrl(relatedPost.imagen) || "/placeholder.svg"}
                           alt={relatedPost.titulo}
                           className="w-full h-full object-cover group-hover:scale-105 transition"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          Sin imagen
-                        </div>
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">Sin imagen</div>
                       )}
                     </div>
                     <div className="p-4">

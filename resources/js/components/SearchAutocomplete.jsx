@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search, X } from 'lucide-react'
-import { api } from '../services/api'
+import { api, getImageUrl } from '../services/api'
 
 export default function SearchAutocomplete() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -100,35 +100,38 @@ export default function SearchAutocomplete() {
             </div>
           ) : results.length > 0 ? (
             <div className="divide-y divide-gray-100">
-              {results.map((product) => (
-                <button
-                  key={product.id}
-                  onClick={() => handleProductClick(product.id)}
-                  className="w-full p-4 hover:bg-gray-50 transition-colors flex items-center gap-4 text-left group"
-                >
-                  <div className="w-16 h-16 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden p-1">
-                    {product.imagen ? (
-                      <img
-                        src={product.imagen || "/placeholder.svg"}
-                        alt={product.nombre}
-                        className="w-full h-full object-contain mix-blend-multiply"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
-                        <Search size={20} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-gray-800 text-sm uppercase truncate group-hover:text-[#0ACF83] transition-colors">
-                      {product.nombre}
-                    </h4>
-                    <p className="text-lg font-bold text-gray-900 mt-1">
-                      S/. {parseFloat(product.precio).toFixed(2)}
-                    </p>
-                  </div>
-                </button>
-              ))}
+              {results.map((product) => {
+                const imagePath = product.imagen || product.imagen_principal
+                return (
+                  <button
+                    key={product.id}
+                    onClick={() => handleProductClick(product.id)}
+                    className="w-full p-4 hover:bg-gray-50 transition-colors flex items-center gap-4 text-left group"
+                  >
+                    <div className="w-16 h-16 flex-shrink-0 bg-white border border-gray-100 rounded-lg overflow-hidden p-1">
+                      {imagePath ? (
+                        <img
+                          src={getImageUrl(imagePath)}
+                          alt={product.nombre}
+                          className="w-full h-full object-contain mix-blend-multiply"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                          <Search size={20} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-gray-800 text-sm uppercase truncate group-hover:text-[#0ACF83] transition-colors">
+                        {product.nombre}
+                      </h4>
+                      <p className="text-lg font-bold text-gray-900 mt-1">
+                        S/. {parseFloat(product.precio).toFixed(2)}
+                      </p>
+                    </div>
+                  </button>
+                )
+              })}
             </div>
           ) : (
             <div className="p-6 text-center text-gray-500">

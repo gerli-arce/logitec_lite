@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, X, Calendar, User } from "lucide-react"
 import Header from "../components/Header"
 import WhatsAppButton from "../components/WhatsAppButton"
 import Footer from "../components/Footer"
@@ -13,6 +13,7 @@ export default function Home() {
   const [posts, setPosts] = useState([])
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   const slides = [
     {
@@ -115,6 +116,48 @@ export default function Home() {
       </div>
     </div>
   )
+
+  const PostModal = () => {
+    if (!selectedPost) return null
+
+    return (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
+          <button
+            onClick={() => setSelectedPost(null)}
+            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          >
+            <X size={24} />
+          </button>
+          <div className="mb-6">
+            {selectedPost.imagen && (
+              <img
+                src={getImageUrl(selectedPost.imagen) || "/placeholder.svg"}
+                alt={selectedPost.titulo}
+                className="w-full h-auto rounded-lg mb-4"
+              />
+            )}
+            <h2 className="text-3xl font-bold text-[#1A1A1A] mb-4">{selectedPost.titulo}</h2>
+            <p className="text-gray-600 text-sm mb-4">
+              <Calendar size={16} className="inline-block mr-1" />{" "}
+              {new Date(selectedPost.fecha_publicacion).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+            <p className="text-gray-900 text-lg line-clamp-none">{selectedPost.contenido}</p>
+          </div>
+          <button
+            onClick={() => window.open(`/blog/${selectedPost.slug}`, "_blank")}
+            className="bg-[#0ACF83] text-white px-8 py-3 rounded-lg font-bold hover:bg-green-600 transition w-full"
+          >
+            Leer Artículo Completo
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -230,7 +273,7 @@ export default function Home() {
                 Ver todos <ChevronRight size={20} />
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {promoProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -254,9 +297,9 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {posts.map((post) => (
-                <Link key={post.id} to={`/blog/${post.slug}`} className="group">
-                  <div className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-                    <div className="bg-gray-200 h-48 overflow-hidden">
+                <Link key={post.id} to={`/blog/${post.slug}`} className="group cursor-pointer">
+                  <div className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition h-full flex flex-col">
+                    <div className="bg-gray-200 h-48 overflow-hidden relative">
                       {post.imagen ? (
                         <img
                           src={getImageUrl(post.imagen) || "/placeholder.svg"}
@@ -266,18 +309,30 @@ export default function Home() {
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400">Sin imagen</div>
                       )}
+                      <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#0ACF83] shadow-sm">
+                        Leer artículo
+                      </div>
                     </div>
-                    <div className="p-4">
-                      <h3 className="font-bold text-lg text-[#1A1A1A] group-hover:text-[#0ACF83] transition mb-2 line-clamp-2">
-                        {post.titulo}
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {new Date(post.fecha_publicacion).toLocaleDateString("es-ES", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
-                      </p>
+                    <div className="p-4 flex-grow flex flex-col justify-between">
+                      <div>
+                        <h3 className="font-bold text-lg text-[#1A1A1A] group-hover:text-[#0ACF83] transition mb-2 line-clamp-2">
+                          {post.titulo}
+                        </h3>
+                        <p className="text-gray-600 text-sm line-clamp-3 mb-4">{post.extracto}</p>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-gray-500 border-t pt-3">
+                        <span className="flex items-center">
+                          <Calendar size={16} className="inline-block mr-1" />{" "}
+                          {new Date(post.fecha_publicacion).toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                        <span className="flex items-center">
+                          <User size={16} className="inline-block mr-1" /> {post.autor}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -286,6 +341,9 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Post Modal */}
+      <PostModal />
 
       <WhatsAppButton />
       {/* Footer component at the bottom */}

@@ -68,10 +68,14 @@ export default function AdminSubcategories() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      const dataToSend = {
+        ...formData,
+        activo: formData.estado,
+      }
       if (editingId) {
-        await api.updateSubcategory(editingId, formData)
+        await api.updateSubcategory(editingId, dataToSend)
       } else {
-        await api.createSubcategory(formData)
+        await api.createSubcategory(dataToSend)
       }
       fetchData(pagination.current_page)
       setShowForm(false)

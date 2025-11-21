@@ -8,11 +8,13 @@ import Header from "../components/Header"
 import Footer from "../components/Footer"
 import { api, getImageUrl } from "../services/api"
 import { useCart } from "../context/CartContext" // Import useCart
+import { useSettings } from "../context/SettingsContext" // Import useSettings
 
 export default function ProductDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { addToCart } = useCart() // Get addToCart function
+  const { getWhatsAppNumber } = useSettings() // Get settings context
   const [product, setProduct] = useState(null)
   const [relatedProducts, setRelatedProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -61,10 +63,10 @@ export default function ProductDetail() {
   }
 
   const handleWhatsAppQuote = () => {
-    const whatsappNumber = "51999999999" // TODO: Get from settings
+    const whatsappNumber = getWhatsAppNumber() // Use dynamic number
     const price = getDisplayPrice()
     const message = `Hola, estoy interesado en: ${product.nombre} - S/ ${price}`
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank")
+    window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`, "_blank") // Clean number
   }
 
   const getDisplayPrice = () => {

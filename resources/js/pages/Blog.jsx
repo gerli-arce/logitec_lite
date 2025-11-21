@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Calendar, ChevronRight } from 'lucide-react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
-import { api } from '../services/api'
+import { api, getImageUrl } from '../services/api'
 
 export default function Blog() {
   const [posts, setPosts] = useState([])
@@ -39,7 +39,7 @@ export default function Blog() {
                 <article className="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
                   <div className="bg-gray-200 h-64 flex items-center justify-center overflow-hidden">
                     {post.imagen ? (
-                      <img src={post.imagen || "/placeholder.svg"} alt={post.titulo} className="w-full h-full object-cover group-hover:scale-105 transition" />
+                      <img src={getImageUrl(post.imagen)} alt={post.titulo} className="w-full h-full object-cover group-hover:scale-105 transition" />
                     ) : (
                       <div className="text-gray-400">Sin imagen</div>
                     )}

@@ -203,6 +203,12 @@ class DatabaseSeeder extends Seeder
             'activo' => true,
         ]);
 
+         // Settings
+        Setting::create([
+            'clave' => 'whatsapp_number', // Changed from whatsapp_phone to whatsapp_number to match frontend
+            'valor' => '+51940781831', // Updated to Peru number
+        ]);
+
         // Settings
         Setting::create([
             'clave' => 'whatsapp_phone',

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import AdminLayout from "../../components/AdminLayout"
-import { Plus, Edit2, Trash2, Search, X, ChevronLeft, ChevronRight, FileText } from "lucide-react"
-import { api } from "../../services/api"
+import { Plus, Edit2, Trash2, Search, X, ChevronLeft, ChevronRight, FileText, ImageIcon } from "lucide-react"
+import { api, getImageUrl } from "../../services/api"
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState([])
@@ -24,6 +24,7 @@ export default function AdminBlog() {
     slug: "",
     contenido: "",
     extracto: "",
+    imagen: null,
     autor: "Admin",
     fecha_publicacion: new Date().toISOString().split("T")[0],
     activo: true,
@@ -95,6 +96,7 @@ export default function AdminBlog() {
       slug: post.slug,
       contenido: post.contenido,
       extracto: post.extracto || "",
+      imagen: post.imagen,
       autor: post.autor || "Admin",
       fecha_publicacion: post.created_at ? post.created_at.split("T")[0] : new Date().toISOString().split("T")[0],
       activo: post.activo,
@@ -109,16 +111,36 @@ export default function AdminBlog() {
       slug: "",
       contenido: "",
       extracto: "",
+      imagen: null,
       autor: "Admin",
       fecha_publicacion: new Date().toISOString().split("T")[0],
       activo: true,
     })
   }
 
-  const openModal = () => {
-    setEditingId(null)
-    resetForm()
-    setShowModal(true)
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setFormData({ ...formData, imagen: reader.result })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handlePaste = (e) => {
+    const items = e.clipboardData.items
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const blob = items[i].getAsFile()
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          setFormData({ ...formData, imagen: reader.result })
+        }
+        reader.readAsDataURL(blob)
+      }
+    }
   }
 
   return (
@@ -130,7 +152,7 @@ export default function AdminBlog() {
             <p className="text-gray-500">Gestiona tus artículos y noticias</p>
           </div>
           <button
-            onClick={openModal}
+            onClick={() => setShowModal(true)}
             className="bg-[#0ACF83] text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition shadow-sm"
           >
             <Plus size={20} />
@@ -161,6 +183,9 @@ export default function AdminBlog() {
               <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    Imagen
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Artículo
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -180,7 +205,7 @@ export default function AdminBlog() {
               <tbody className="divide-y divide-gray-100">
                 {isLoading ? (
                   <tr>
-                    <td colSpan="5" className="px-6 py-8 text-center">
+                    <td colSpan="6" className="px-6 py-8 text-center">
                       <div className="flex justify-center">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0ACF83]"></div>
                       </div>
@@ -188,13 +213,28 @@ export default function AdminBlog() {
                   </tr>
                 ) : posts.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
                       No se encontraron artículos
                     </td>
                   </tr>
                 ) : (
                   posts.map((post) => (
                     <tr key={post.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="h-12 w-12 rounded-lg bg-gray-100 overflow-hidden border border-gray-200">
+                          {post.imagen ? (
+                            <img
+                              src={getImageUrl(post.imagen) || "/placeholder.svg"}
+                              alt={post.titulo}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-full w-full flex items-center justify-center text-gray-400">
+                              <ImageIcon size={20} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="h-10 w-10 flex-shrink-0 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
@@ -288,7 +328,10 @@ export default function AdminBlog() {
         {/* Modal Formulario */}
         {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div
+              className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+              onPaste={handlePaste}
+            >
               <div className="flex justify-between items-center p-6 border-b border-gray-100">
                 <h2 className="text-xl font-bold text-gray-900">{editingId ? "Editar Artículo" : "Nuevo Artículo"}</h2>
                 <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 transition">
@@ -298,6 +341,58 @@ export default function AdminBlog() {
 
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Imagen Principal</label>
+                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-[#0ACF83] transition-colors cursor-pointer relative bg-gray-50">
+                      <div className="space-y-1 text-center">
+                        {formData.imagen ? (
+                          <div className="relative">
+                            <img
+                              src={formData.imagen.startsWith("data:") ? formData.imagen : getImageUrl(formData.imagen)}
+                              alt="Preview"
+                              className="mx-auto h-48 object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setFormData({ ...formData, imagen: null })
+                              }}
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 shadow-md"
+                            >
+                              <X size={16} />
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                            <div className="flex text-sm text-gray-600 justify-center">
+                              <label
+                                htmlFor="file-upload"
+                                className="relative cursor-pointer bg-white rounded-md font-medium text-[#0ACF83] hover:text-green-600 focus-within:outline-none"
+                              >
+                                <span>Subir un archivo</span>
+                                <input
+                                  id="file-upload"
+                                  name="file-upload"
+                                  type="file"
+                                  className="sr-only"
+                                  accept="image/*"
+                                  onChange={handleImageChange}
+                                />
+                              </label>
+                              <p className="pl-1">o arrastrar y soltar</p>
+                            </div>
+                            <p className="text-xs text-gray-500">PNG, JPG, GIF hasta 2MB</p>
+                            <p className="text-xs text-[#0ACF83] mt-2 font-medium">
+                              ¡Tip! Puedes pegar (Ctrl+V) una imagen aquí
+                            </p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
                     <input

@@ -9,7 +9,8 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return response()->json(Setting::all());
+        $settings = Setting::all()->pluck('valor', 'clave');
+        return response()->json($settings);
     }
 
     public function show($clave)
@@ -23,19 +24,22 @@ class SettingController extends Controller
         return response()->json($setting);
     }
 
-    public function update(Request $request, $clave)
+    public function update(Request $request)
     {
-        $this->authorize('isAdmin', auth()->user());
+        $user = auth()->user();
+        if (!$user || !$user->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
 
-        $validated = $request->validate([
-            'valor' => 'required',
-        ]);
+        $data = $request->all();
 
-        $setting = Setting::updateOrCreate(
-            ['clave' => $clave],
-            ['valor' => $validated['valor']]
-        );
+        foreach ($data as $key => $value) {
+            Setting::updateOrCreate(
+                ['clave' => $key],
+                ['valor' => $value]
+            );
+        }
 
-        return response()->json($setting);
+        return response()->json(['message' => 'Configuración actualizada correctamente']);
     }
 }

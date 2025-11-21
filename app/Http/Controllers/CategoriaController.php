@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule; // Added Rule import
 
 class CategoriaController extends Controller
 {
@@ -31,7 +32,9 @@ class CategoriaController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
@@ -53,11 +56,13 @@ class CategoriaController extends Controller
 
     public function update(Request $request, Categoria $categoria)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $validated = $request->validate([
             'nombre' => 'string|max:255',
-            'slug' => 'string|unique:categorias,slug,' . $categoria->id,
+            'slug' => ['string', Rule::unique('categorias')->ignore($categoria->id)],
             'descripcion' => 'nullable|string',
             'imagen' => 'nullable|image|max:2048',
             'activo' => 'boolean',
@@ -70,7 +75,9 @@ class CategoriaController extends Controller
 
     public function destroy(Categoria $categoria)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $categoria->delete();
 

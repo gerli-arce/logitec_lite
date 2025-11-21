@@ -1,10 +1,10 @@
-import React from 'react'
-import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Menu, X, ChevronDown, ChevronRight, User, ShoppingCart } from 'lucide-react'
-import { api } from '../services/api'
-import SearchAutocomplete from './SearchAutocomplete'
-import { useCart } from '../context/CartContext'
+"use client"
+import { useState, useEffect, useRef } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { Menu, X, ChevronDown, ChevronRight, User, ShoppingCart } from "lucide-react"
+import { api } from "../services/api"
+import SearchAutocomplete from "./SearchAutocomplete"
+import { useCart } from "../context/CartContext"
 
 export default function Header({ onSelectCategory }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -19,13 +19,13 @@ export default function Header({ onSelectCategory }) {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        console.log('[v0] Fetching categories from API...')
+        console.log("[v0] Fetching categories from API...")
         const response = await api.getCategories()
-        console.log('[v0] Categories response:', response)
+        console.log("[v0] Categories response:", response)
         setCategories(response)
         setLoading(false)
       } catch (error) {
-        console.error('[v0] Failed to fetch categories:', error)
+        console.error("[v0] Failed to fetch categories:", error)
         setLoading(false)
       }
     }
@@ -41,11 +41,11 @@ export default function Header({ onSelectCategory }) {
     }
 
     if (showMegaMenu) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [showMegaMenu])
 
@@ -55,11 +55,11 @@ export default function Header({ onSelectCategory }) {
 
   const handleCategoryClick = (categoryId, subcategoryId = null) => {
     const params = new URLSearchParams()
-    if (categoryId) params.append('categoria', categoryId)
-    if (subcategoryId) params.append('subcategoria', subcategoryId)
-    
+    if (categoryId) params.append("categoria", categoryId)
+    if (subcategoryId) params.append("subcategoria", subcategoryId)
+
     navigate(`/productos?${params.toString()}`)
-    
+
     if (onSelectCategory) {
       onSelectCategory(categoryId, subcategoryId)
     }
@@ -68,10 +68,8 @@ export default function Header({ onSelectCategory }) {
   }
 
   const toggleMobileCategory = (categoryId) => {
-    setExpandedCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
+    setExpandedCategories((prev) =>
+      prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId],
     )
   }
 
@@ -91,24 +89,19 @@ export default function Header({ onSelectCategory }) {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/" 
-              className="text-gray-700 hover:text-[#0ACF83] transition font-medium"
-            >
+            <Link to="/" className="text-gray-700 hover:text-[#0ACF83] transition font-medium">
               Home
             </Link>
 
-            <div 
+            <div
               className="static"
               onMouseEnter={() => setShowMegaMenu(true)}
               onMouseLeave={() => setShowMegaMenu(false)}
               ref={megaMenuRef}
             >
-              <button 
-                className="flex items-center space-x-1 text-gray-700 hover:text-[#0ACF83] transition font-medium h-16"
-              >
+              <button className="flex items-center space-x-1 text-gray-700 hover:text-[#0ACF83] transition font-medium h-16">
                 <span>Productos</span>
-                <ChevronDown size={16} className={`transition-transform ${showMegaMenu ? 'rotate-180' : ''}`} />
+                <ChevronDown size={16} className={`transition-transform ${showMegaMenu ? "rotate-180" : ""}`} />
               </button>
 
               {showMegaMenu && (
@@ -159,33 +152,26 @@ export default function Header({ onSelectCategory }) {
                         </div>
                       </>
                     ) : (
-                      <div className="text-center text-gray-500 py-4">
-                        No hay categorías disponibles
-                      </div>
+                      <div className="text-center text-gray-500 py-4">No hay categorías disponibles</div>
                     )}
                   </div>
                 </div>
               )}
             </div>
 
-            <Link 
-              to="/nosotros" 
-              className="text-gray-700 hover:text-[#0ACF83] transition font-medium"
-            >
+            <Link to="/nosotros" className="text-gray-700 hover:text-[#0ACF83] transition font-medium">
               Nosotros
             </Link>
 
-            <Link 
-              to="/contacto" 
-              className="text-gray-700 hover:text-[#0ACF83] transition font-medium"
-            >
+            <Link to="/blog" className="text-gray-700 hover:text-[#0ACF83] transition font-medium">
+              Blog
+            </Link>
+
+            <Link to="/contacto" className="text-gray-700 hover:text-[#0ACF83] transition font-medium">
               Contacto
             </Link>
 
-            <Link 
-              to="/carrito" 
-              className="relative text-gray-700 hover:text-[#0ACF83] transition font-medium"
-            >
+            <Link to="/carrito" className="relative text-gray-700 hover:text-[#0ACF83] transition font-medium">
               <ShoppingCart size={24} />
               {getCartCount() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
@@ -194,8 +180,8 @@ export default function Header({ onSelectCategory }) {
               )}
             </Link>
 
-            <Link 
-              to="/admin/login" 
+            <Link
+              to="/admin/login"
               className="flex items-center space-x-2 text-gray-700 hover:text-[#0ACF83] transition font-medium"
             >
               <User size={20} />
@@ -203,7 +189,7 @@ export default function Header({ onSelectCategory }) {
             </Link>
           </nav>
 
-          <button 
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-gray-700 hover:text-[#0ACF83] transition"
           >
@@ -216,14 +202,14 @@ export default function Header({ onSelectCategory }) {
             <div className="px-4 pt-4 pb-2">
               <SearchAutocomplete />
             </div>
-            
+
             <nav className="space-y-1 pt-2">
               {loading ? (
                 <div className="px-4 py-3 text-gray-500 text-sm">Cargando...</div>
               ) : categories.length > 0 ? (
                 <div className="space-y-1">
                   <button
-                    onClick={() => navigate('/productos')}
+                    onClick={() => navigate("/productos")}
                     className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
                   >
                     Ver Todos los Productos
@@ -235,7 +221,7 @@ export default function Header({ onSelectCategory }) {
                         onClick={() => toggleMobileCategory(category.id)}
                         className="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-50 transition"
                       >
-                        <span 
+                        <span
                           className="font-semibold"
                           onClick={(e) => {
                             e.stopPropagation()
@@ -244,9 +230,9 @@ export default function Header({ onSelectCategory }) {
                         >
                           {category.nombre}
                         </span>
-                        <ChevronDown 
-                          size={16} 
-                          className={`transition-transform ${expandedCategories.includes(category.id) ? 'rotate-180' : ''}`}
+                        <ChevronDown
+                          size={16}
+                          className={`transition-transform ${expandedCategories.includes(category.id) ? "rotate-180" : ""}`}
                         />
                       </button>
 
@@ -268,8 +254,8 @@ export default function Header({ onSelectCategory }) {
                   ))}
                 </div>
               ) : (
-                <Link 
-                  to="/productos" 
+                <Link
+                  to="/productos"
                   onClick={() => setIsOpen(false)}
                   className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
                 >
@@ -277,24 +263,32 @@ export default function Header({ onSelectCategory }) {
                 </Link>
               )}
 
-              <Link 
-                to="/nosotros" 
+              <Link
+                to="/nosotros"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
               >
                 Nosotros
               </Link>
 
-              <Link 
-                to="/contacto" 
+              <Link
+                to="/blog"
+                onClick={() => setIsOpen(false)}
+                className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
+              >
+                Blog
+              </Link>
+
+              <Link
+                to="/contacto"
                 onClick={() => setIsOpen(false)}
                 className="block px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
               >
                 Contacto
               </Link>
 
-              <Link 
-                to="/carrito" 
+              <Link
+                to="/carrito"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
               >
@@ -309,8 +303,8 @@ export default function Header({ onSelectCategory }) {
                 <span>Carrito de Compras</span>
               </Link>
 
-              <Link 
-                to="/admin/login" 
+              <Link
+                to="/admin/login"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-[#0ACF83] transition rounded-lg font-medium"
               >

@@ -1,13 +1,13 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
-import AdminLayout from '../../components/AdminLayout'
-import { api } from '../../services/api'
+"use client"
+import { useState, useEffect } from "react"
+import AdminLayout from "../../components/AdminLayout"
+import { api } from "../../services/api"
 
 export default function AdminSettings() {
-  const [whatsappNumber, setWhatsappNumber] = useState('')
+  const [whatsappNumber, setWhatsappNumber] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     fetchSettings()
@@ -20,7 +20,7 @@ export default function AdminSettings() {
         setWhatsappNumber(data.whatsapp_number)
       }
     } catch (error) {
-      console.error('Failed to fetch settings:', error)
+      console.error("Failed to fetch settings:", error)
     } finally {
       setIsLoading(false)
     }
@@ -31,11 +31,11 @@ export default function AdminSettings() {
     setIsSaving(true)
     try {
       await api.updateSettings({ whatsapp_number: whatsappNumber })
-      setMessage('Configuración guardada exitosamente')
-      setTimeout(() => setMessage(''), 3000)
+      setMessage("Configuración guardada exitosamente")
+      setTimeout(() => setMessage(""), 3000)
     } catch (error) {
-      console.error('Failed to save settings:', error)
-      setMessage('Error al guardar la configuración')
+      console.error("Failed to save settings:", error)
+      setMessage("Error al guardar la configuración")
     } finally {
       setIsSaving(false)
     }
@@ -50,24 +50,22 @@ export default function AdminSettings() {
           <div className="bg-white rounded-lg shadow p-8 max-w-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Número de WhatsApp de LOGITEC
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Número de WhatsApp de LOGITEC</label>
                 <input
                   type="text"
                   value={whatsappNumber}
                   onChange={(e) => setWhatsappNumber(e.target.value)}
                   required
-                  placeholder="+549112345678"
+                  placeholder="+51940781831"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0ACF83] focus:border-[#0ACF83]"
                 />
-                <p className="text-gray-500 text-sm mt-2">
-                  Formato: +54 seguido del número (ej: +549112345678)
-                </p>
+                <p className="text-gray-500 text-sm mt-2">Formato: +51 seguido del número (ej: +51940781831)</p>
               </div>
 
               {message && (
-                <div className={`p-4 rounded-lg ${message.includes('Error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+                <div
+                  className={`p-4 rounded-lg ${message.includes("Error") ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}
+                >
                   {message}
                 </div>
               )}
@@ -77,7 +75,7 @@ export default function AdminSettings() {
                 disabled={isSaving}
                 className="bg-[#0ACF83] text-white px-6 py-2 rounded-lg hover:bg-green-600 transition disabled:opacity-50"
               >
-                {isSaving ? 'Guardando...' : 'Guardar Cambios'}
+                {isSaving ? "Guardando..." : "Guardar Cambios"}
               </button>
             </form>
           </div>

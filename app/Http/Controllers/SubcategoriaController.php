@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subcategoria;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule; // Added Rule import
 
 class SubcategoriaController extends Controller
 {
@@ -35,7 +36,9 @@ class SubcategoriaController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $validated = $request->validate([
             'categoria_id' => 'required|exists:categorias,id',
@@ -58,11 +61,13 @@ class SubcategoriaController extends Controller
 
     public function update(Request $request, Subcategoria $subcategoria)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $validated = $request->validate([
             'nombre' => 'string|max:255',
-            'slug' => 'string|unique:subcategorias,slug,' . $subcategoria->id,
+            'slug' => ['string', Rule::unique('subcategorias')->ignore($subcategoria->id)],
             'descripcion' => 'nullable|string',
             'imagen' => 'nullable|image|max:2048',
             'activo' => 'boolean',
@@ -75,7 +80,9 @@ class SubcategoriaController extends Controller
 
     public function destroy(Subcategoria $subcategoria)
     {
-        $this->authorize('isAdmin', auth()->user());
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized action.'], 403);
+        }
 
         $subcategoria->delete();
 

@@ -1,12 +1,15 @@
 import axios from "axios"
 
-const API_URL = "/api"
-export const STORAGE_URL = "http://127.0.0.1:8000"
+// Use env-configurable backend URLs so it works in local and production
+const BACKEND_URL = (import.meta?.env?.VITE_BACKEND_URL || "").replace(/\/$/, "") || "http://127.0.0.1:8000"
+const API_URL = import.meta?.env?.VITE_API_URL || `${BACKEND_URL}/api`
+export const STORAGE_URL = BACKEND_URL
 
 export const getImageUrl = (path) => {
   if (!path) return "/placeholder.svg"
   if (path.startsWith("http") || path.startsWith("data:")) return path
-  return `${STORAGE_URL}${path}`
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`
+  return `${STORAGE_URL}${normalizedPath}`
 }
 
 const apiClient = axios.create({
@@ -45,7 +48,8 @@ export const api = {
   // Auth
   getCsrfCookie: () => apiClient.get("/sanctum/csrf-cookie"), // Add method to fetch CSRF cookie
 
-  login: (email, password) => apiClient.post("/auth/login", { email, password }).then((res) => res.data),
+  login: (email, password, remember = false) =>
+    apiClient.post("/auth/login", { email, password, remember }).then((res) => res.data),
 
   logout: () => apiClient.post("/auth/logout").then((res) => res.data),
 
@@ -115,6 +119,8 @@ export const api = {
   getAdminPosts: (params) => apiClient.get("/admin/posts", { params }).then((res) => res.data), // Added getAdminPosts method
 
   getPost: (id) => apiClient.get(`/posts/${id}`).then((res) => res.data),
+
+  getPostBySlug: (slug) => apiClient.get(`/posts/slug/${slug}`).then((res) => res.data), // Added method to fetch post by slug
 
   createPost: (data) => apiClient.post("/posts", data).then((res) => res.data),
 
