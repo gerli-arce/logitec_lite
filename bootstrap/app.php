@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
+        // Exclude API routes from CSRF because authentication uses bearer tokens instead of session cookies
+        $middleware->validateCsrfTokens(except: ['api/*']);
         
         $middleware->alias([
             'cors' => \App\Http\Middleware\Cors::class,

@@ -15,6 +15,8 @@ export const getImageUrl = (path) => {
 const apiClient = axios.create({
   baseURL: API_URL,
   withCredentials: true, // Enable sending cookies with requests
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -44,9 +46,18 @@ apiClient.interceptors.response.use(
   },
 )
 
+// Separate client to hit sanctum root endpoints (they are not under /api)
+const csrfClient = axios.create({
+  baseURL: BACKEND_URL,
+  withCredentials: true,
+  xsrfCookieName: "XSRF-TOKEN",
+  xsrfHeaderName: "X-XSRF-TOKEN",
+})
+
 export const api = {
   // Auth
-  getCsrfCookie: () => apiClient.get("/sanctum/csrf-cookie"), // Add method to fetch CSRF cookie
+  // Sanctum's CSRF endpoint lives at the app root, not /api
+  getCsrfCookie: () => csrfClient.get("/sanctum/csrf-cookie"),
 
   login: (email, password, remember = false) =>
     apiClient.post("/auth/login", { email, password, remember }).then((res) => res.data),

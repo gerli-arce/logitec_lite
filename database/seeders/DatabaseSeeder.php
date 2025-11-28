@@ -16,20 +16,26 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Usuario Admin
-        User::create([
-            'name' => 'Admin LOGITEC',
-            'email' => 'admin@logitec.com',
-            'password' => Hash::make('password123'),
-            'role' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@logitec.com'],
+            [
+                'name' => 'Admin LOGITEC',
+                'email' => 'admin@logitec.com',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+            ]
+        );
 
         // Usuario normal
-        User::create([
-            'name' => 'Cliente LOGITEC',
-            'email' => 'cliente@logitec.com',
-            'password' => Hash::make('password123'),
-            'role' => 'user',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'cliente@logitec.com'],
+            [
+                'name' => 'Cliente LOGITEC',
+                'email' => 'cliente@logitec.com',
+                'password' => Hash::make('password123'),
+                'role' => 'user',
+            ]
+        );
 
         // Categorías
         $computadoras = Categoria::create([
