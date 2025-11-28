@@ -12,7 +12,7 @@ export default function About() {
       <div className="relative bg-[#1A1A1A] py-24 sm:py-32">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src="/placeholder.svg?height=1080&width=1920"
+            src="/backgrondforabaut.jpg?height=1080&width=1920"
             alt="Background"
             className="w-full h-full object-cover opacity-20"
           />

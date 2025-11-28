@@ -206,6 +206,14 @@ export default function Products() {
     })
   }
 
+  const clearFilters = () => {
+    setSelectedCategories([])
+    setSelectedSubcategories([])
+    setExpandedCategories([])
+    setSearchTerm('')
+    setCurrentPage(1)
+  }
+
   const handleAddToCart = (product) => {
     addToCart(product, 1)
     Swal.fire({
@@ -244,6 +252,12 @@ export default function Products() {
               className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
             />
           </div>
+          <button
+            onClick={clearFilters}
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium underline-offset-2 hover:underline"
+          >
+            Limpiar filtros
+          </button>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8 items-start">

@@ -3,9 +3,9 @@ node_modules/
 vendor/
 
 # Environment
-.env
-.env.local
-.env.*.local
+# .env
+# .env.local
+# .env.*.local
 
 # IDE
 .vscode/
@@ -21,12 +21,12 @@ build/
 
 # Laravel
 backend/bootstrap/cache/
-backend/storage/
-backend/public/storage
-backend/.env
-backend/.env.*.php
-backend/.env.*.backup
-backend/.env.backup
+# backend/storage/
+# backend/public/storage
+# backend/.env
+# backend/.env.*.php
+# backend/.env.*.backup
+# backend/.env.backup
 
 # Logs
 npm-debug.log*

@@ -28,6 +28,7 @@ export default function AdminProducts() {
     nombre: "",
     slug: "",
     descripcion: "",
+    marca: "",
     precio: "",
     precio_oferta: "",
     stock: "",
@@ -107,6 +108,7 @@ export default function AdminProducts() {
         nombre: formData.nombre,
         slug: formData.slug,
         descripcion: formData.descripcion,
+        marca: formData.marca,
         precio: formData.precio,
         precio_oferta: formData.precio_oferta,
         stock: formData.stock,
@@ -128,6 +130,7 @@ export default function AdminProducts() {
           nombre: "",
           slug: "",
           descripcion: "",
+          marca: "",
           precio: "",
           precio_oferta: "",
           stock: "",
@@ -147,6 +150,7 @@ export default function AdminProducts() {
           nombre: "",
           slug: "",
           descripcion: "",
+          marca: "",
           precio: "",
           precio_oferta: "",
           stock: "",
@@ -179,6 +183,7 @@ export default function AdminProducts() {
       ...product,
       categoria_id: product.categoria_id || "",
       subcategoria_id: product.subcategoria_id || "",
+      marca: product.marca || "",
       precio_oferta: product.precio_oferta || "",
       stock: product.stock || "",
       destacado: Boolean(product.destacado),
@@ -306,11 +311,11 @@ export default function AdminProducts() {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0ACF83] focus:border-[#0ACF83]"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-                <input
-                  type="text"
-                  value={formData.slug}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+              <input
+                type="text"
+                value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   required
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0ACF83] focus:border-[#0ACF83]"
@@ -325,6 +330,17 @@ export default function AdminProducts() {
                 onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0ACF83] focus:border-[#0ACF83]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Marca</label>
+              <input
+                type="text"
+                value={formData.marca}
+                onChange={(e) => setFormData({ ...formData, marca: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-[#0ACF83] focus:border-[#0ACF83]"
+                placeholder="Ej. Hikvision, Dahua, Sin marca"
               />
             </div>
 

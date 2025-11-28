@@ -41,7 +41,11 @@ export default function Blog() {
                     {post.imagen ? (
                       <img src={getImageUrl(post.imagen)} alt={post.titulo} className="w-full h-full object-cover group-hover:scale-105 transition" />
                     ) : (
-                      <div className="text-gray-400">Sin imagen</div>
+                      <img
+                        src="/placeholder.svg"
+                        alt="Imagen no disponible"
+                        className="w-full h-full object-contain opacity-70 p-6"
+                      />
                     )}
                   </div>
                   <div className="p-6">

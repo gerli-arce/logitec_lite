@@ -16,6 +16,7 @@ class Producto extends Model
         'nombre',
         'slug',
         'descripcion',
+        'marca',
         'especificaciones',
         'precio',
         'precio_oferta',

@@ -78,7 +78,11 @@ export default function Home() {
             className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
         ) : (
-          <div className="text-gray-400">Sin imagen</div>
+          <img
+            src="/placeholder.svg"
+            alt="Imagen no disponible"
+            className="w-24 h-24 object-contain opacity-70"
+          />
         )}
         {product.precio_oferta && (
           <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold z-10">
@@ -165,7 +169,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Slider */}
-      <section className="relative bg-[#1A1A1A] h-[500px] overflow-hidden">
+      <section className="relative bg-[#1A1A1A] h-[600px] overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -249,7 +253,13 @@ export default function Home() {
           <h2 className="text-4xl font-bold mb-4">Atención Directa por WhatsApp</h2>
           <p className="text-xl mb-6">Consulta con nuestros expertos y recibe asesoramiento personalizado</p>
           <button
-            onClick={() => window.open("https://wa.me/", "_blank")}
+            onClick={() => {
+              const numero = window.localStorage.getItem("settings.whatsapp") || ""
+              const mensaje = "Hola vengo de la web, estoy interesado en comprar un articulo"
+              const phone = numero.replace(/\D/g, "")
+              const url = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(mensaje)}` : `https://wa.me/?text=${encodeURIComponent(mensaje)}`
+              window.open(url, "_blank")
+            }}
             className="bg-white text-[#0ACF83] px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
           >
             Contactar Ahora
@@ -307,7 +317,11 @@ export default function Home() {
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">Sin imagen</div>
+                        <img
+                          src="/placeholder.svg"
+                          alt="Imagen no disponible"
+                          className="w-full h-full object-contain opacity-70 p-6"
+                        />
                       )}
                       <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-[#0ACF83] shadow-sm">
                         Leer artículo

@@ -70,11 +70,17 @@ export default function BlogDetail() {
         </Link>
 
         <article className="bg-white rounded-lg shadow-lg overflow-hidden mb-12">
-          {post.imagen && (
+          {post.imagen ? (
             <img
               src={getImageUrl(post.imagen) || "/placeholder.svg"}
               alt={post.titulo}
               className="w-full h-96 object-cover"
+            />
+          ) : (
+            <img
+              src="/placeholder.svg"
+              alt="Imagen no disponible"
+              className="w-full h-96 object-contain opacity-70 p-8 bg-gray-50"
             />
           )}
 
