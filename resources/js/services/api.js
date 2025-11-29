@@ -13,10 +13,7 @@ export const getImageUrl = (path) => {
   // Normalize backslashes and ensure leading slash so it works on Windows paths
   const cleaned = path.replace(/\\/g, "/")
   const normalizedPath = cleaned.startsWith("/") ? cleaned : `/${cleaned}`
-  const finalPath = normalizedPath.startsWith("/storage")
-    ? normalizedPath
-    : `/storage${normalizedPath}`
-  return `${STORAGE_URL}${finalPath}`
+  return `${STORAGE_URL}${normalizedPath}`
 }
 
 const apiClient = axios.create({
