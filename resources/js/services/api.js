@@ -13,7 +13,11 @@ export const getImageUrl = (path) => {
   // Normalize backslashes and ensure leading slash so it works on Windows paths
   const cleaned = path.replace(/\\/g, "/")
   const normalizedPath = cleaned.startsWith("/") ? cleaned : `/${cleaned}`
-  return `${STORAGE_URL}${normalizedPath}`
+  // If path already points to /storage keep it, otherwise prefix storage (Laravel symlink)
+  const storagePath = normalizedPath.startsWith("/storage")
+    ? normalizedPath
+    : `/storage${normalizedPath}`
+  return `${STORAGE_URL}${storagePath}`
 }
 
 const apiClient = axios.create({
