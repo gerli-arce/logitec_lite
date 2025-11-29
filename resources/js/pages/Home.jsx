@@ -197,6 +197,23 @@ export default function Home() {
           </div>
         ))}
 
+        {/* Large click zones for easier navigation */}
+        <div className="absolute inset-0 grid grid-cols-3 pointer-events-none">
+          <button
+            type="button"
+            aria-label="Imagen anterior"
+            onClick={prevSlide}
+            className="pointer-events-auto h-full w-full transition hover:bg-white/5 focus:outline-none"
+          />
+          <div className="pointer-events-none" />
+          <button
+            type="button"
+            aria-label="Siguiente imagen"
+            onClick={nextSlide}
+            className="pointer-events-auto h-full w-full transition hover:bg-white/5 focus:outline-none"
+          />
+        </div>
+
         {/* Slider Controls */}
         <button
           onClick={prevSlide}
