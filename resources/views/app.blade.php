@@ -23,6 +23,12 @@
     <meta name="twitter:title" content="{{ $metaTitle }}">
     <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="{{ $metaImage }}">
+    <script>
+        window.__APP_CONFIG__ = {
+            BACKEND_URL: "{{ rtrim(config('app.url', url('/')), '/') }}",
+            API_URL: "{{ rtrim(config('app.url', url('/')), '/') }}/api"
+        };
+    </script>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
