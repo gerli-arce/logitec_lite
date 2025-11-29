@@ -10,10 +10,13 @@ export const STORAGE_URL = BACKEND_URL
 export const getImageUrl = (path) => {
   if (!path) return "/placeholder.svg"
   if (path.startsWith("http") || path.startsWith("data:")) return path
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`
-  // Encode to avoid breaking URLs when filenames have spaces or special chars
-  const safePath = encodeURI(normalizedPath)
-  return `${STORAGE_URL}${safePath}`
+  // Normalize backslashes and ensure leading slash so it works on Windows paths
+  const cleaned = path.replace(/\\/g, "/")
+  const normalizedPath = cleaned.startsWith("/") ? cleaned : `/${cleaned}`
+  const finalPath = normalizedPath.startsWith("/storage")
+    ? normalizedPath
+    : `/storage${normalizedPath}`
+  return `${STORAGE_URL}${finalPath}`
 }
 
 const apiClient = axios.create({
