@@ -256,6 +256,8 @@ export default function Home() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd(slide.link)}
             onClick={() => handleSlideClick(slide.link)}
+            role="button"
+            tabIndex={0}
           >
             <img
               src={slide.image || "/placeholder.svg"}
@@ -266,33 +268,11 @@ export default function Home() {
               <div className="text-center text-white px-4">
                 <h2 className="text-5xl md:text-6xl font-bold mb-4">{slide.title}</h2>
                 <p className="text-xl md:text-2xl mb-8">{slide.description}</p>
-                <Link
-                  to="/productos"
-                  className="inline-block bg-[#0ACF83] text-white px-8 py-3 rounded-lg font-bold hover:bg-green-600 transition"
-                >
-                  Ver Ofertas
-                </Link>
+                {/* CTA removed per request; entire slide is now clickable */}
               </div>
             </div>
           </div>
         ))}
-
-        {/* Large click zones for easier navigation */}
-        <div className="absolute inset-0 grid grid-cols-3 pointer-events-none">
-          <button
-            type="button"
-            aria-label="Imagen anterior"
-            onClick={prevSlide}
-            className="pointer-events-auto h-full w-full bg-transparent focus:outline-none active:outline-none"
-          />
-          <div className="pointer-events-none" />
-          <button
-            type="button"
-            aria-label="Siguiente imagen"
-            onClick={nextSlide}
-            className="pointer-events-auto h-full w-full bg-transparent focus:outline-none active:outline-none"
-          />
-        </div>
 
         {/* Slider Controls */}
         <button
