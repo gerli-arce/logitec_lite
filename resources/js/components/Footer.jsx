@@ -6,7 +6,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#1A1A1A] text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div>
@@ -103,7 +103,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-gray-800 pt-6 space-y-3">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
               &copy; {currentYear} LOGITELL. Todos los derechos reservados.
@@ -113,6 +113,17 @@ export default function Footer() {
               <a href="#" className="hover:text-[#0ACF83] transition">Términos y Condiciones</a>
               <a href="#" className="hover:text-[#0ACF83] transition">Preguntas Frecuentes</a>
             </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-4 text-center">
+            <a
+              href="https://conorld.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold bg-gradient-to-r from-sky-300 via-blue-400 to-blue-600 bg-clip-text text-transparent hover:from-sky-400 hover:via-blue-500 hover:to-blue-700 transition"
+            >
+              Creado por CONORLD
+            </a>
           </div>
         </div>
       </div>
