@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import { ChevronLeft, ChevronRight, X, Calendar, User } from "lucide-react"
 import Header from "../components/Header"
@@ -14,6 +14,7 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPost, setSelectedPost] = useState(null)
+  const autoplayRef = useRef(null)
 
   const slides = [
     {
@@ -37,11 +38,18 @@ export default function Home() {
     fetchData()
   }, [])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
+  const resetAutoplay = () => {
+    if (autoplayRef.current) clearInterval(autoplayRef.current)
+    autoplayRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
-    return () => clearInterval(timer)
+  }
+
+  useEffect(() => {
+    resetAutoplay()
+    return () => {
+      if (autoplayRef.current) clearInterval(autoplayRef.current)
+    }
   }, [slides.length])
 
   const fetchData = async () => {
@@ -62,8 +70,18 @@ export default function Home() {
     }
   }
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length)
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length)
+    resetAutoplay()
+  }
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    resetAutoplay()
+  }
+  const goToSlide = (index) => {
+    setCurrentSlide(index)
+    resetAutoplay()
+  }
 
   const ProductCard = ({ product }) => (
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
@@ -203,14 +221,14 @@ export default function Home() {
             type="button"
             aria-label="Imagen anterior"
             onClick={prevSlide}
-            className="pointer-events-auto h-full w-full transition hover:bg-white/5 focus:outline-none"
+            className="pointer-events-auto h-full w-full bg-transparent focus:outline-none active:outline-none"
           />
           <div className="pointer-events-none" />
           <button
             type="button"
             aria-label="Siguiente imagen"
             onClick={nextSlide}
-            className="pointer-events-auto h-full w-full transition hover:bg-white/5 focus:outline-none"
+            className="pointer-events-auto h-full w-full bg-transparent focus:outline-none active:outline-none"
           />
         </div>
 
@@ -233,7 +251,7 @@ export default function Home() {
           {slides.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => goToSlide(index)}
               className={`w-3 h-3 rounded-full transition ${
                 index === currentSlide ? "bg-[#0ACF83] w-8" : "bg-white/50"
               }`}
