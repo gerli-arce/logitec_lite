@@ -80,7 +80,7 @@ class ProductoController extends Controller
             ], 403);
         }
 
-        $query = Producto::query();
+        $query = Producto::with(['categoria', 'subcategoria']);
 
         if ($request->filled('categoria_id')) {
             $categoryIds = explode(',', $request->categoria_id);
