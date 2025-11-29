@@ -118,17 +118,17 @@ export default function Home() {
           <div>
             {product.precio_oferta ? (
               <>
-                <p className="text-[#0ACF83] font-bold text-xl">${product.precio_oferta}</p>
-                <p className="text-gray-400 line-through text-sm">${product.precio}</p>
+                <p className="text-[#0ACF83] font-bold text-xl">S/. {product.precio_oferta}</p>
+                <p className="text-gray-400 line-through text-sm">S/. {product.precio}</p>
               </>
             ) : (
-              <p className="text-[#0ACF83] font-bold text-xl">${product.precio}</p>
+              <p className="text-[#0ACF83] font-bold text-xl">S/. {product.precio}</p>
             )}
           </div>
         </div>
         <button
           onClick={() => {
-            const message = `Hola, estoy interesado en: ${product.nombre} - $${product.precio_oferta || product.precio}`
+            const message = `Hola, estoy interesado en: ${product.nombre} - S/. ${product.precio_oferta || product.precio}`
             window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank")
           }}
           className="w-full bg-[#0ACF83] text-white px-4 py-2 rounded hover:bg-green-600 transition font-semibold"

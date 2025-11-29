@@ -2,13 +2,12 @@
 import { useState, useEffect } from "react"
 import AdminLayout from "../../components/AdminLayout"
 import { api } from "../../services/api"
+import { toastSuccess, toastError } from "../../lib/alerts"
 
 export default function AdminSettings() {
   const [whatsappNumber, setWhatsappNumber] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
-  const [message, setMessage] = useState("")
-
   useEffect(() => {
     fetchSettings()
   }, [])
@@ -31,11 +30,10 @@ export default function AdminSettings() {
     setIsSaving(true)
     try {
       await api.updateSettings({ whatsapp_number: whatsappNumber })
-      setMessage("Configuración guardada exitosamente")
-      setTimeout(() => setMessage(""), 3000)
+      toastSuccess("Configuracion guardada")
     } catch (error) {
       console.error("Failed to save settings:", error)
-      setMessage("Error al guardar la configuración")
+      toastError("Error al guardar la configuracion")
     } finally {
       setIsSaving(false)
     }
@@ -61,14 +59,6 @@ export default function AdminSettings() {
                 />
                 <p className="text-gray-500 text-sm mt-2">Formato: +51 seguido del número (ej: +51940781831)</p>
               </div>
-
-              {message && (
-                <div
-                  className={`p-4 rounded-lg ${message.includes("Error") ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}
-                >
-                  {message}
-                </div>
-              )}
 
               <button
                 type="submit"

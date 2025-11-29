@@ -4,6 +4,7 @@ import AdminLayout from '../../components/AdminLayout'
 import { User, Mail, Lock, Camera } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { api } from '../../services/api'
+import { toastSuccess, toastError } from '../../lib/alerts'
 
 export default function AdminProfile() {
   const { user } = useAuth()
@@ -18,7 +19,6 @@ export default function AdminProfile() {
   })
   const [avatar, setAvatar] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
-  const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function AdminProfile() {
     }
   }
 
-  const handleProfileUpdate = async (e) => {
+const handleProfileUpdate = async (e) => {
     e.preventDefault()
     setIsLoading(true)
     try {
@@ -55,11 +55,10 @@ export default function AdminProfile() {
       }
       
       await api.updateProfile(formData)
-      setMessage('Perfil actualizado exitosamente')
-      setTimeout(() => setMessage(''), 3000)
+      toastSuccess('Perfil actualizado')
     } catch (error) {
       console.error('Failed to update profile:', error)
-      setMessage('Error al actualizar el perfil')
+      toastError('Error al actualizar el perfil')
     } finally {
       setIsLoading(false)
     }
@@ -68,22 +67,21 @@ export default function AdminProfile() {
   const handlePasswordUpdate = async (e) => {
     e.preventDefault()
     if (passwordData.new_password !== passwordData.new_password_confirmation) {
-      setMessage('Las contraseñas no coinciden')
+      toastError('Las contraseñas no coinciden')
       return
     }
     setIsLoading(true)
     try {
       await api.updatePassword(passwordData)
-      setMessage('Contraseña actualizada exitosamente')
+      toastSuccess('Contraseña actualizada')
       setPasswordData({
         current_password: '',
         new_password: '',
         new_password_confirmation: '',
       })
-      setTimeout(() => setMessage(''), 3000)
     } catch (error) {
       console.error('Failed to update password:', error)
-      setMessage('Error al actualizar la contraseña')
+      toastError('Error al actualizar la contraseña')
     } finally {
       setIsLoading(false)
     }
@@ -93,12 +91,6 @@ export default function AdminProfile() {
     <AdminLayout>
       <div>
         <h1 className="text-3xl font-bold text-[#1A1A1A] mb-8">Mi Perfil</h1>
-
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg ${message.includes('Error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
-            {message}
-          </div>
-        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Profile Information */}

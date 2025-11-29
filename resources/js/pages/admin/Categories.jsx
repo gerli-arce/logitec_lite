@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import AdminLayout from "../../components/AdminLayout"
 import { Plus, Edit2, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react"
 import { api } from "../../services/api"
+import { toastSuccess, toastError } from "../../lib/alerts"
 
 export default function AdminCategories() {
   const [categories, setCategories] = useState([])
@@ -65,8 +66,10 @@ export default function AdminCategories() {
       }
       if (editingId) {
         await api.updateCategory(editingId, dataToSend)
+        toastSuccess("Categoria actualizada")
       } else {
         await api.createCategory(dataToSend)
+        toastSuccess("Categoria creada")
       }
       fetchCategories(pagination.current_page)
       setShowForm(false)
@@ -74,16 +77,19 @@ export default function AdminCategories() {
       setFormData({ nombre: "", slug: "", estado: true })
     } catch (error) {
       console.error("Failed to save category:", error)
+      toastError("No se pudo guardar la categoria")
     }
   }
 
   const handleDelete = async (id) => {
-    if (confirm("¿Estás seguro de que deseas eliminar esta categoría?")) {
+    if (confirm("¿Estás seguro de que deseas eliminar esta categoria?")) {
       try {
         await api.deleteCategory(id)
         fetchCategories(pagination.current_page)
+        toastSuccess("Categoria eliminada")
       } catch (error) {
         console.error("Failed to delete category:", error)
+        toastError("No se pudo eliminar la categoria")
       }
     }
   }
@@ -103,8 +109,8 @@ export default function AdminCategories() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-[#1A1A1A]">Categorías</h1>
-            <p className="text-gray-500 mt-1">Gestiona las categorías de tus productos</p>
+            <h1 className="text-3xl font-bold text-[#1A1A1A]">Categorias</h1>
+            <p className="text-gray-500 mt-1">Gestiona las categorias de tus productos</p>
           </div>
           <button
             onClick={() => {
@@ -115,7 +121,7 @@ export default function AdminCategories() {
             className="bg-[#0ACF83] text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition shadow-sm"
           >
             <Plus size={20} />
-            <span>Nueva Categoría</span>
+            <span>Nueva Categoria</span>
           </button>
         </div>
 
@@ -124,7 +130,7 @@ export default function AdminCategories() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
-              placeholder="Buscar categorías..."
+              placeholder="Buscar categorias..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0ACF83]/20 focus:border-[#0ACF83]"
@@ -136,7 +142,7 @@ export default function AdminCategories() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
               <h2 className="text-xl font-bold text-[#1A1A1A] mb-4">
-                {editingId ? "Editar Categoría" : "Nueva Categoría"}
+                {editingId ? "Editar Categoria" : "Nueva Categoria"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -166,7 +172,7 @@ export default function AdminCategories() {
                     onChange={(e) => setFormData({ ...formData, estado: e.target.checked })}
                     className="w-4 h-4 text-[#0ACF83] border-gray-300 rounded focus:ring-[#0ACF83]"
                   />
-                  <label className="ml-2 text-sm font-medium text-gray-700">Categoría Activa</label>
+                  <label className="ml-2 text-sm font-medium text-gray-700">Categoria Activa</label>
                 </div>
                 <div className="flex space-x-3 pt-2">
                   <button
@@ -246,7 +252,7 @@ export default function AdminCategories() {
                   ) : (
                     <tr>
                       <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
-                        No se encontraron categorías
+                        No se encontraron categorias
                       </td>
                     </tr>
                   )}

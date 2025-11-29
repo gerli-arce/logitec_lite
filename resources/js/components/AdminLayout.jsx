@@ -22,14 +22,14 @@ export default function AdminLayout({ children }) {
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-[#1A1A1A] text-white transition-all duration-300 flex flex-col`}>
         <div className="p-4 flex items-center justify-between">
-          {sidebarOpen && (
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-[#0ACF83] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">L</span>
-              </div>
-              <span className="font-bold">LOGITELL</span>
-            </div>
-          )}
+          <div className="flex items-center space-x-2">
+            <img
+              src="/storage/images/LOGO_HEADER.svg"
+              alt="LOGITELL"
+              className={`${sidebarOpen ? 'h-10 w-auto' : 'h-10 w-10'} object-contain`}
+            />
+            {sidebarOpen && <span className="font-bold">LOGITELL</span>}
+          </div>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

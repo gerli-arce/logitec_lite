@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import AdminLayout from "../../components/AdminLayout"
 import { Plus, Edit2, Trash2, Search, X, ChevronLeft, ChevronRight, FileText, ImageIcon } from "lucide-react"
 import { api, getImageUrl } from "../../services/api"
+import { toastSuccess, toastError } from "../../lib/alerts"
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState([])
@@ -67,8 +68,10 @@ export default function AdminBlog() {
     try {
       if (editingId) {
         await api.updatePost(editingId, formData)
+        toastSuccess("Entrada actualizada")
       } else {
         await api.createPost(formData)
+        toastSuccess("Entrada creada")
       }
       fetchPosts()
       setShowModal(false)
@@ -76,6 +79,7 @@ export default function AdminBlog() {
       resetForm()
     } catch (error) {
       console.error("Failed to save post:", error)
+      toastError("No se pudo guardar la entrada")
     }
   }
 
@@ -84,8 +88,10 @@ export default function AdminBlog() {
       try {
         await api.deletePost(id)
         fetchPosts()
+        toastSuccess("Entrada eliminada")
       } catch (error) {
         console.error("Failed to delete post:", error)
+        toastError("No se pudo eliminar la entrada")
       }
     }
   }

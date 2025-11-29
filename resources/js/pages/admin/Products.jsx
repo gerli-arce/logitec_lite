@@ -4,6 +4,7 @@ import AdminLayout from "../../components/AdminLayout"
 import Modal from "../../components/Modal"
 import { Plus, Edit2, Trash2, ImageIcon, Search, Filter, ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"
 import { api, getImageUrl } from "../../services/api"
+import { toastSuccess, toastError } from "../../lib/alerts"
 
 export default function AdminProducts() {
   const [products, setProducts] = useState([])
@@ -122,48 +123,33 @@ export default function AdminProducts() {
 
       if (editingId) {
         await api.updateProduct(editingId, submitData)
-        fetchData()
-        setShowForm(false)
-        setEditingId(null)
-        setImagePreview(null)
-        setFormData({
-          nombre: "",
-          slug: "",
-          descripcion: "",
-          marca: "",
-          precio: "",
-          precio_oferta: "",
-          stock: "",
-          imagen_principal: null,
-          categoria_id: "",
-          subcategoria_id: "",
-          destacado: false,
-          promocion: false,
-          activo: true,
-        })
+        toastSuccess("Producto actualizado")
       } else {
         await api.createProduct(submitData)
-        fetchData()
-        setShowForm(false)
-        setImagePreview(null)
-        setFormData({
-          nombre: "",
-          slug: "",
-          descripcion: "",
-          marca: "",
-          precio: "",
-          precio_oferta: "",
-          stock: "",
-          imagen_principal: null,
-          categoria_id: "",
-          subcategoria_id: "",
-          destacado: false,
-          promocion: false,
-          activo: true,
-        })
+        toastSuccess("Producto creado")
       }
+      fetchData()
+      setShowForm(false)
+      setEditingId(null)
+      setImagePreview(null)
+      setFormData({
+        nombre: "",
+        slug: "",
+        descripcion: "",
+        marca: "",
+        precio: "",
+        precio_oferta: "",
+        stock: "",
+        imagen_principal: null,
+        categoria_id: "",
+        subcategoria_id: "",
+        destacado: false,
+        promocion: false,
+        activo: true,
+      })
     } catch (error) {
       console.error("Failed to save product:", error)
+      toastError("No se pudo guardar el producto")
     }
   }
 
@@ -172,8 +158,10 @@ export default function AdminProducts() {
       try {
         await api.deleteProduct(id)
         fetchData()
+        toastSuccess("Producto eliminado")
       } catch (error) {
         console.error("Failed to delete product:", error)
+        toastError("No se pudo eliminar el producto")
       }
     }
   }
@@ -531,89 +519,114 @@ export default function AdminProducts() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {products.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="h-12 w-12 flex-shrink-0 rounded-lg border border-gray-100 overflow-hidden bg-white">
-                            <img
-                              src={getImageUrl(product.imagen_principal) || "/placeholder.svg"}
-                              alt={product.nombre}
-                              className="h-full w-full object-cover"
-                            />
+                  {products.map((product) => {
+                    const categoryName =
+                      product.categoria?.nombre ||
+                      product.categoria?.name ||
+                      product.categoria_nombre ||
+                      product.category?.nombre ||
+                      product.category?.name ||
+                      product.categoria_name
+                    const brandName =
+                      product.marca ||
+                      product.brand?.nombre ||
+                      product.brand?.name ||
+                      product.marca_nombre ||
+                      product.marca_name
+
+                    return (
+                      <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            <div className="h-12 w-12 flex-shrink-0 rounded-lg border border-gray-100 overflow-hidden bg-white">
+                              <img
+                                src={getImageUrl(product.imagen_principal) || "/placeholder.svg"}
+                                alt={product.nombre}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">{product.nombre}</div>
+                              <div className="text-xs text-gray-500">
+                                {brandName && <span className="text-gray-600 font-semibold">{brandName}</span>}
+                                {brandName && categoryName && <span className="text-gray-400"> ? </span>}
+                                {categoryName ? (
+                                  <span className="text-gray-500">{categoryName}</span>
+                                ) : (
+                                  <span className="text-gray-400">Sin categor?a</span>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{product.nombre}</div>
-                            <div className="text-xs text-gray-500">{product.categoria?.nombre || "Sin categoría"}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900 font-medium">S/. {product.precio}</div>
+                          {product.precio_oferta && (
+                            <div className="text-xs text-red-500 line-through">S/. {product.precio_oferta}</div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className={`text-sm font-medium ${product.stock < 5 ? "text-red-600" : "text-gray-900"}`}>
+                            {product.stock} u.
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900 font-medium">${product.precio}</div>
-                        {product.precio_oferta && (
-                          <div className="text-xs text-red-500 line-through">${product.precio_oferta}</div>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className={`text-sm font-medium ${product.stock < 5 ? "text-red-600" : "text-gray-900"}`}>
-                          {product.stock} u.
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => toggleProductStatus(product.id, "activo")}
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
-                            product.activo
-                              ? "bg-green-100 text-green-800 hover:bg-green-200"
-                              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                          }`}
-                        >
-                          {product.activo ? "Activo" : "Inactivo"}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex justify-center space-x-2">
+                        </td>
+                        <td className="px-6 py-4 text-center">
                           <button
-                            onClick={() => toggleProductStatus(product.id, "destacado")}
-                            title="Destacado"
-                            className={`p-1 rounded-full transition-colors ${
-                              product.destacado ? "text-yellow-500 bg-yellow-50" : "text-gray-300 hover:text-gray-400"
+                            onClick={() => toggleProductStatus(product.id, "activo")}
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
+                              product.activo
+                                ? "bg-green-100 text-green-800 hover:bg-green-200"
+                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                             }`}
                           >
-                            <CheckCircle size={18} />
+                            {product.activo ? "Activo" : "Inactivo"}
                           </button>
-                          <button
-                            onClick={() => toggleProductStatus(product.id, "promocion")}
-                            title="Promoción"
-                            className={`p-1 rounded-full transition-colors ${
-                              product.promocion ? "text-red-500 bg-red-50" : "text-gray-300 hover:text-gray-400"
-                            }`}
-                          >
-                            <Filter size={18} />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-3">
-                          <button
-                            onClick={() => handleEdit(product)}
-                            className="text-gray-400 hover:text-[#0ACF83] transition-colors"
-                            title="Editar"
-                          >
-                            <Edit2 size={18} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(product.id)}
-                            className="text-gray-400 hover:text-red-600 transition-colors"
-                            title="Eliminar"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex justify-center space-x-2">
+                            <button
+                              onClick={() => toggleProductStatus(product.id, "destacado")}
+                              title="Destacado"
+                              className={`p-1 rounded-full transition-colors ${
+                                product.destacado ? "text-yellow-500 bg-yellow-50" : "text-gray-300 hover:text-gray-400"
+                              }`}
+                            >
+                              <CheckCircle size={18} />
+                            </button>
+                            <button
+                              onClick={() => toggleProductStatus(product.id, "promocion")}
+                              title="Promoci?n"
+                              className={`p-1 rounded-full transition-colors ${
+                                product.promocion ? "text-red-500 bg-red-50" : "text-gray-300 hover:text-gray-400"
+                              }`}
+                            >
+                              <Filter size={18} />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-right text-sm font-medium">
+                          <div className="flex items-center justify-end space-x-3">
+                            <button
+                              onClick={() => handleEdit(product)}
+                              className="text-gray-400 hover:text-[#0ACF83] transition-colors"
+                              title="Editar"
+                            >
+                              <Edit2 size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(product.id)}
+                              className="text-gray-400 hover:text-red-600 transition-colors"
+                              title="Eliminar"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
+
               </table>
             </div>
 

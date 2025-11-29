@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import AdminLayout from "../../components/AdminLayout"
 import { Plus, Edit2, Trash2, Search, ChevronLeft, ChevronRight } from "lucide-react"
 import { api } from "../../services/api"
+import { toastSuccess, toastError } from "../../lib/alerts"
 
 export default function AdminSubcategories() {
   const [subcategories, setSubcategories] = useState([])
@@ -74,8 +75,10 @@ export default function AdminSubcategories() {
       }
       if (editingId) {
         await api.updateSubcategory(editingId, dataToSend)
+        toastSuccess("Subcategoria actualizada")
       } else {
         await api.createSubcategory(dataToSend)
+        toastSuccess("Subcategoria creada")
       }
       fetchData(pagination.current_page)
       setShowForm(false)
@@ -83,6 +86,7 @@ export default function AdminSubcategories() {
       setFormData({ nombre: "", slug: "", categoria_id: "", estado: true })
     } catch (error) {
       console.error("Failed to save subcategory:", error)
+      toastError("No se pudo guardar la subcategoria")
     }
   }
 
@@ -91,8 +95,10 @@ export default function AdminSubcategories() {
       try {
         await api.deleteSubcategory(id)
         fetchData(pagination.current_page)
+        toastSuccess("Subcategoria eliminada")
       } catch (error) {
         console.error("Failed to delete subcategory:", error)
+        toastError("No se pudo eliminar la subcategoria")
       }
     }
   }
