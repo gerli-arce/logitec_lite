@@ -2,8 +2,10 @@ import axios from "axios"
 
 // Use env-configurable backend URLs so it works in local and production
 const runtimeConfig = (typeof window !== "undefined" && window.__APP_CONFIG__) || {}
+const originFallback = typeof window !== "undefined" ? window.location.origin : ""
 const BACKEND_URL =
-  (runtimeConfig.BACKEND_URL || import.meta?.env?.VITE_BACKEND_URL || "").replace(/\/$/, "") || "http://127.0.0.1:8000"
+  (runtimeConfig.BACKEND_URL || import.meta?.env?.VITE_BACKEND_URL || originFallback || "").replace(/\/$/, "") ||
+  "http://127.0.0.1:8000"
 const API_URL = runtimeConfig.API_URL || import.meta?.env?.VITE_API_URL || `${BACKEND_URL}/api`
 export const STORAGE_URL = BACKEND_URL
 
@@ -13,11 +15,13 @@ export const getImageUrl = (path) => {
   // Normalize backslashes and ensure leading slash so it works on Windows paths
   const cleaned = path.replace(/\\/g, "/")
   const normalizedPath = cleaned.startsWith("/") ? cleaned : `/${cleaned}`
-  // If path already points to /storage keep it, otherwise prefix storage (Laravel symlink)
-  const storagePath = normalizedPath.startsWith("/storage")
-    ? normalizedPath
-    : `/storage${normalizedPath}`
-  return `${STORAGE_URL}${storagePath}`
+  // Candidate paths to cover both `/storage/foo.jpg` and `foo.jpg`
+  const candidates = [
+    normalizedPath.startsWith("/storage") ? normalizedPath : `/storage${normalizedPath}`,
+    normalizedPath, // fallback without storage in case API already returns absolute public path
+  ]
+  const uniquePaths = [...new Set(candidates)]
+  return `${STORAGE_URL}${uniquePaths[0]}`
 }
 
 const apiClient = axios.create({
