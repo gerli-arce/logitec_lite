@@ -1,4 +1,4 @@
-// API Client for LOGITEC Backend (Laravel)
+// API Client for LOGITELL Backend (Laravel)
 // Update BASE_URL with your Laravel backend URL
 
 import axios from 'axios'

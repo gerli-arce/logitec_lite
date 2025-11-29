@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $user = User::where('email', 'admin@logitec.com')->first();
+        $user = User::where('email', 'admin@logitell.com')->first();
         
         if ($user) {
             $user->role = 'admin';
@@ -18,7 +18,7 @@ return new class extends Migration
         } else {
             User::create([
                 'name' => 'Admin',
-                'email' => 'admin@logitec.com',
+                'email' => 'admin@logitell.com',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
             ]);

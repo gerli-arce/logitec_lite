@@ -50,7 +50,7 @@ export default function AdminSettings() {
           <div className="bg-white rounded-lg shadow p-8 max-w-2xl">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Número de WhatsApp de LOGITEC</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Número de WhatsApp de LOGITELL</label>
                 <input
                   type="text"
                   value={whatsappNumber}

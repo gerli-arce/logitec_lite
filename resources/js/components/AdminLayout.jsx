@@ -27,7 +27,7 @@ export default function AdminLayout({ children }) {
               <div className="w-8 h-8 bg-[#0ACF83] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">L</span>
               </div>
-              <span className="font-bold">LOGITEC</span>
+              <span className="font-bold">LOGITELL</span>
             </div>
           )}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">

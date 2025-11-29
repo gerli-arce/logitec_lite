@@ -261,7 +261,7 @@ export default function Products() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
-          <aside className="w-full md:w-64 lg:w-72 flex-shrink-0 sticky top-24">
+          <aside className="w-full md:w-64 lg:w-72 flex-shrink-0 md:sticky md:top-24 md:max-h-[80vh] md:overflow-y-auto">
             <ProductFilters 
               categories={categories}
               selectedCategories={selectedCategories}

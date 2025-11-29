@@ -15,7 +15,7 @@ export default function Navbar() {
               <div className="w-8 h-8 bg-[#0ACF83] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">L</span>
               </div>
-              <span className="text-xl font-bold text-[#1A1A1A]">LOGITEC</span>
+              <span className="text-xl font-bold text-[#1A1A1A]">LOGITELL</span>
             </Link>
           </div>
 

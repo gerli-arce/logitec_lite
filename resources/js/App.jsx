@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom"
+import { useEffect } from "react"
+import { Routes, Route, useLocation } from "react-router-dom"
 import { CartProvider } from "./context/CartContext" // Import CartProvider
 import { SettingsProvider } from "./context/SettingsContext" // Import SettingsProvider
 import Home from "./pages/Home"
@@ -20,6 +21,14 @@ import ProductDetail from "./pages/ProductDetail"
 import Cart from "./pages/Cart" // Import Cart page
 
 export default function App() {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+    }
+  }, [location.pathname, location.search])
+
   return (
     <SettingsProvider>
       <CartProvider>

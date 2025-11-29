@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'LOGITEC E-Commerce - Laravel + React',
+  title: 'LOGITELL E-Commerce - Laravel + React',
   description: 'Proyecto híbrido Laravel 11 + React 18 + Vite',
     generator: 'v0.app'
 };

@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // Usuario Admin
         User::updateOrCreate(
-            ['email' => 'admin@logitec.com'],
+            ['email' => 'admin@logitell.com'],
             [
-                'name' => 'Admin LOGITEC',
-                'email' => 'admin@logitec.com',
+                'name' => 'Admin LOGITELL',
+                'email' => 'admin@logitell.com',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
             ]
@@ -28,10 +28,10 @@ class DatabaseSeeder extends Seeder
 
         // Usuario normal
         User::updateOrCreate(
-            ['email' => 'cliente@logitec.com'],
+            ['email' => 'cliente@logitell.com'],
             [
-                'name' => 'Cliente LOGITEC',
-                'email' => 'cliente@logitec.com',
+                'name' => 'Cliente LOGITELL',
+                'email' => 'cliente@logitell.com',
                 'password' => Hash::make('password123'),
                 'role' => 'user',
             ]
@@ -196,7 +196,7 @@ class DatabaseSeeder extends Seeder
             'slug' => 'top-5-laptops-gaming-2024',
             'contenido' => 'En este artículo te presentamos las mejores laptops gaming disponibles en 2024...',
             'extracto' => 'Descubre las mejores opciones de laptops gaming para jugar en máxima calidad',
-            'autor' => 'Admin LOGITEC',
+            'autor' => 'Admin LOGITELL',
             'activo' => true,
         ]);
 
@@ -205,7 +205,7 @@ class DatabaseSeeder extends Seeder
             'slug' => 'guia-camaras-ip-hogar',
             'contenido' => 'Todo lo que necesitas saber sobre cámaras IP para proteger tu hogar...',
             'extracto' => 'Aprende cómo elegir e instalar cámaras de seguridad IP',
-            'autor' => 'Admin LOGITEC',
+            'autor' => 'Admin LOGITELL',
             'activo' => true,
         ]);
 
@@ -228,12 +228,12 @@ class DatabaseSeeder extends Seeder
 
         Setting::create([
             'clave' => 'store_name',
-            'valor' => 'LOGITEC',
+            'valor' => 'LOGITELL',
         ]);
 
         Setting::create([
             'clave' => 'store_email',
-            'valor' => 'info@logitec.com',
+            'valor' => 'info@logitell.com',
         ]);
 
         // ============================================================
@@ -427,7 +427,7 @@ class DatabaseSeeder extends Seeder
             [
                 'categoria_id' => $accesorios->id,
                 'subcategoria_id' => $sub5->id,
-                'nombre' => 'Teclado Logitech MK850',
+                'nombre' => 'Teclado Logitellh MK850',
                 'slug' => 'teclado-logitech-mk850',
                 'descripcion' => 'Teclado ergonómico inalámbrico',
                 'precio' => 89,
@@ -437,7 +437,7 @@ class DatabaseSeeder extends Seeder
             [
                 'categoria_id' => $accesorios->id,
                 'subcategoria_id' => $sub6->id,
-                'nombre' => 'Audífonos Logitech G435',
+                'nombre' => 'Audífonos Logitellh G435',
                 'slug' => 'audifonos-g435',
                 'descripcion' => 'Audífonos inalámbricos con micrófono',
                 'precio' => 79,

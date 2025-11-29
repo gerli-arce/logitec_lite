@@ -22,7 +22,7 @@ export default function About() {
             Innovación que <span className="text-[#0ACF83]">Conecta</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            En Logitec, transformamos la manera en que interactúas con la tecnología. 
+            En Logitell, transformamos la manera en que interactúas con la tecnología. 
             Desde seguridad avanzada hasta computación de alto rendimiento.
           </p>
         </div>
@@ -33,7 +33,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-[#1A1A1A] mb-6">Sobre Logitec</h2>
+              <h2 className="text-3xl font-bold text-[#1A1A1A] mb-6">Sobre Logitell</h2>
               <p className="text-gray-600 text-lg mb-4 leading-relaxed">
                 Somos una empresa líder dedicada a la venta y distribución de soluciones tecnológicas integrales. 
                 Nos especializamos en equipar hogares y empresas con lo último en cámaras de seguridad, 
@@ -46,8 +46,8 @@ export default function About() {
             </div>
             <div className="relative h-96 rounded-2xl overflow-hidden shadow-xl">
                <img 
-                 src="/placeholder.svg?height=600&width=800" 
-                 alt="Equipo Logitec" 
+                 src="/storage/images/tecnico_reparando.jpeg?height=600&width=800" 
+                 alt="Equipo Logitell" 
                  className="w-full h-full object-cover"
                />
             </div>
@@ -116,7 +116,7 @@ export default function About() {
       {/* Why Choose Us */}
       <section className="py-16 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-12">¿Por qué elegir Logitec?</h2>
+          <h2 className="text-3xl font-bold mb-12">¿Por qué elegir Logitell?</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 bg-[#0ACF83] rounded-full flex items-center justify-center mb-4">

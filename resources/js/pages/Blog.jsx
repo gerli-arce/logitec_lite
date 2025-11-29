@@ -29,7 +29,7 @@ export default function Blog() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-[#1A1A1A] mb-4">Blog Técnico LOGITEC</h1>
+        <h1 className="text-4xl font-bold text-[#1A1A1A] mb-4">Blog Técnico LOGITELL</h1>
         <p className="text-gray-600 text-lg mb-12">Artículos, guías y noticias sobre tecnología</p>
 
         {!isLoading ? (

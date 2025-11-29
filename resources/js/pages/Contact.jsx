@@ -56,8 +56,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800">Ubicación</h4>
-                      <p className="text-gray-600">Av. Tecnología 123, Centro Empresarial</p>
-                      <p className="text-gray-600">Lima, Perú</p>
+                      <p className="text-gray-600">Jr. Santo Toribio con 7 de Junio</p>
+                      <p className="text-gray-600">Pichanaki, Junín, Perú</p>
                     </div>
                   </div>
 
@@ -67,8 +67,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800">Teléfono</h4>
-                      <p className="text-gray-600">+51 1 234 5678</p>
-                      <p className="text-gray-600">+51 999 888 777</p>
+                      <p className="text-gray-600">+51 916 572 151</p>
+                      <p className="text-gray-600">+51 946 382 589</p>
                     </div>
                   </div>
 
@@ -78,8 +78,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800">Email</h4>
-                      <p className="text-gray-600">ventas@logitec.com</p>
-                      <p className="text-gray-600">soporte@logitec.com</p>
+                      <p className="text-gray-600">ventas@logitell.com</p>
+                      <p className="text-gray-600">soporte@logitell.com</p>
                     </div>
                   </div>
 
@@ -89,8 +89,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <h4 className="font-semibold text-gray-800">Horario de Atención</h4>
-                      <p className="text-gray-600">Lun - Vie: 9:00 AM - 6:00 PM</p>
-                      <p className="text-gray-600">Sáb: 9:00 AM - 1:00 PM</p>
+                      <p className="text-gray-600">Lun - Vie: 8:00 AM - 8:00 PM</p>
+                      {/* <p className="text-gray-600">Sáb: 9:00 AM - 1:00 PM</p> */}
                     </div>
                   </div>
                 </div>

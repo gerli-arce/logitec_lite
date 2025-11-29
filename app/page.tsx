@@ -3,7 +3,7 @@ export default function Page() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center p-8">
       <div className="max-w-4xl bg-white rounded-2xl shadow-2xl p-12">
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-green-600 mb-4">LOGITEC E-Commerce</h1>
+          <h1 className="text-5xl font-bold text-green-600 mb-4">LOGITELL E-Commerce</h1>
           <p className="text-xl text-gray-600">Proyecto Laravel 11 + React 18 + Vite</p>
         </div>
 
@@ -51,7 +51,7 @@ export default function Page() {
             <h3 className="text-2xl font-bold text-purple-800 mb-4">🔑 Credenciales</h3>
             <div className="text-purple-700">
               <p><strong>Admin:</strong></p>
-              <p>Email: admin@logitec.com</p>
+              <p>Email: admin@logitell.com</p>
               <p>Password: password123</p>
             </div>
           </div>

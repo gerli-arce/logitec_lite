@@ -1,8 +1,8 @@
 {
-    "name": "logitec/ecommerce",
+    "name": "logitell/ecommerce",
     "type": "project",
-    "description": "LOGITEC E-commerce Platform - Laravel + React",
-    "keywords": ["laravel", "react", "ecommerce", "logitec"],
+    "description": "LOGITELL E-commerce Platform - Laravel + React",
+    "keywords": ["laravel", "react", "ecommerce", "logitell"],
     "license": "MIT",
     "require": {
         "php": "^8.2",

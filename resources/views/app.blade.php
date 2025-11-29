@@ -4,7 +4,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'LOGITEC') }}</title>
+    @php
+        $appUrl = config('app.url', url('/'));
+        $metaTitle = 'LOGITELL | Tecnologia, computo y seguridad';
+        $metaDescription = 'Compra laptops, PCs, smartphones y camaras en LOGITELL. Envio a todo Peru.';
+        $metaImage = $appUrl.'/storage/images/ICONO%20%20256%20X%20256.png';
+    @endphp
+    <title>{{ $metaTitle }}</title>
+    <link rel="canonical" href="{{ $appUrl }}">
+    <link rel="icon" type="image/png" sizes="256x256" href="{{ $metaImage }}">
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta property="og:title" content="{{ $metaTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $appUrl }}">
+    <meta property="og:image" content="{{ $metaImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $metaTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $metaImage }}">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

@@ -21,8 +21,8 @@ export default function WhatsAppButton({ productName }) {
     const whatsappNumber = getWhatsAppNumber() // Get dynamic number
 
     const message = productName
-      ? `Hola, soy cliente de LOGITEC y estoy interesado en: ${productName}`
-      : "Hola, soy cliente de LOGITEC. Quisiera obtener más información."
+      ? `Hola, soy cliente de LOGITELL y estoy interesado en: ${productName}`
+      : "Hola, soy cliente de LOGITELL. Quisiera obtener más información."
 
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")

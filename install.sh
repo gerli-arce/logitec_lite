@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Instalando LOGITEC E-commerce..."
+echo "🚀 Instalando LOGITELL E-commerce..."
 
 echo "📁 Creando directorios de Laravel..."
 mkdir -p bootstrap/cache
@@ -31,7 +31,7 @@ npm install --legacy-peer-deps
 
 # Crear base de datos
 echo "🗄️ Configurando base de datos..."
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS logitec_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || echo "⚠️  No se pudo crear la base de datos automáticamente. Créala manualmente."
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS logitell_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" 2>/dev/null || echo "⚠️  No se pudo crear la base de datos automáticamente. Créala manualmente."
 
 # Ejecutar migraciones
 echo "📊 Ejecutando migraciones..."

@@ -7,24 +7,40 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([])
+  const getInitialCart = () => {
+    if (typeof window === 'undefined') return []
+    const savedCart = localStorage.getItem('cart') || sessionStorage.getItem('cart')
+    if (!savedCart) return []
+    try {
+      return JSON.parse(savedCart)
+    } catch (e) {
+      console.error('Error parsing cart from storage', e)
+      return []
+    }
+  }
+
+  const [cart, setCart] = useState(getInitialCart)
   const [total, setTotal] = useState(0)
 
-  // Load cart from sessionStorage on mount
-  useEffect(() => {
-    const savedCart = sessionStorage.getItem('cart')
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart))
-      } catch (e) {
-        console.error('Error parsing cart from session storage', e)
-      }
-    }
-  }, [])
+  const getMaxQuantity = (item) => {
+    const stock = Number.parseInt(item?.stock)
+    if (Number.isNaN(stock)) return Infinity
+    return Math.max(stock, 0)
+  }
 
-  // Save cart to sessionStorage whenever it changes
+  const clampQuantity = (item, desiredQuantity) => {
+    const maxQuantity = getMaxQuantity(item)
+    const normalized = Math.max(desiredQuantity, 1)
+    if (maxQuantity === Infinity) return normalized
+    return Math.min(normalized, maxQuantity)
+  }
+
+  // Save cart to storage whenever it changes
   useEffect(() => {
-    sessionStorage.setItem('cart', JSON.stringify(cart))
+    if (typeof window === 'undefined') return
+    const serialized = JSON.stringify(cart)
+    localStorage.setItem('cart', serialized)
+    sessionStorage.setItem('cart', serialized) // keep for backward compatibility
     calculateTotal()
   }, [cart])
 
@@ -39,15 +55,26 @@ export function CartProvider({ children }) {
   const addToCart = (product, quantity = 1) => {
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex(item => item.id === product.id)
+      const maxQuantity = getMaxQuantity(product)
+
+      // If there is no stock, do not add the item
+      if (maxQuantity < 1) {
+        return prevCart
+      }
       
       if (existingItemIndex >= 0) {
         // Item exists, update quantity
         const newCart = [...prevCart]
-        newCart[existingItemIndex].quantity += quantity
+        const newQuantity = clampQuantity(
+          newCart[existingItemIndex],
+          newCart[existingItemIndex].quantity + quantity
+        )
+        newCart[existingItemIndex].quantity = newQuantity
         return newCart
       } else {
         // New item
-        return [...prevCart, { ...product, quantity }]
+        const allowedQuantity = clampQuantity(product, quantity)
+        return [...prevCart, { ...product, quantity: allowedQuantity }]
       }
     })
   }
@@ -57,12 +84,14 @@ export function CartProvider({ children }) {
   }
 
   const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) return
-    
-    setCart(prevCart => 
-      prevCart.map(item => 
-        item.id === productId ? { ...item, quantity: newQuantity } : item
-      )
+    setCart(prevCart =>
+      prevCart
+        .map(item => {
+          if (item.id !== productId) return item
+          const clamped = clampQuantity(item, newQuantity)
+          return { ...item, quantity: clamped }
+        })
+        .filter(item => item.quantity > 0)
     )
   }
 

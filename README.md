@@ -1,4 +1,4 @@
-# LOGITEC E-commerce - Proyecto Híbrido React + Vite + Laravel
+# LOGITELL E-commerce - Proyecto Híbrido React + Vite + Laravel
 
 Aplicación de e-commerce profesional y completa con **Frontend React + Vite** y **Backend Laravel 11**. Setup automático, documentación detallada y lista para producción.
 
@@ -30,6 +30,6 @@ Aplicación de e-commerce profesional y completa con **Frontend React + Vite** y
 
 ### Windows
 ```batch
-cd LOGITEC
+cd LOGITELL
 setup.bat
 start-development.bat

@@ -65,7 +65,7 @@ export default function AdminLogin() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="block w-full pl-10 pr-3 py-3 bg-zinc-950/50 border border-zinc-800 rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
-                  placeholder="admin@logitec.com"
+                  placeholder="admin@logitell.com"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function AdminLogin() {
             Volver al inicio
           </Link>
           <p className="text-zinc-600 text-xs">
-            &copy; {new Date().getFullYear()} Logitec Admin System.
+            &copy; {new Date().getFullYear()} Logitell Admin System.
             <br />
             Acceso restringido a personal autorizado.
           </p>

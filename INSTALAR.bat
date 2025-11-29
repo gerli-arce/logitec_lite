@@ -1,6 +1,6 @@
 @echo off
 echo ========================================
-echo INSTALADOR LOGITEC E-COMMERCE
+echo INSTALADOR LOGITELL E-COMMERCE
 echo ========================================
 echo.
 
@@ -46,7 +46,7 @@ echo - Backend: http://localhost:8000
 echo - Admin: http://localhost:5173/admin
 echo.
 echo Credenciales admin:
-echo - Email: admin@logitec.com
+echo - Email: admin@logitell.com
 echo - Password: password123
 echo.
 pause

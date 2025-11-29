@@ -11,16 +11,19 @@ export default function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-[#0ACF83] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">L</span>
-              </div>
-              <span className="text-2xl font-bold">LOGITEC</span>
+              <img
+                src="/storage/images/LOGO_HEADER.svg"
+                alt="LOGITELL"
+                width="120"
+                height="44"
+                className="h-11 w-auto object-contain"
+              />
             </div>
             <p className="text-gray-400 leading-relaxed mb-4">
               Tu tienda de tecnología de confianza. Cámaras de seguridad, teléfonos, computadoras y más.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
+              <a href="https://www.facebook.com/profile.php?id=61584215709998" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
                 <Facebook size={18} />
               </a>
               <a href="#" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
@@ -29,9 +32,9 @@ export default function Footer() {
               <a href="#" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
                 <Twitter size={18} />
               </a>
-              <a href="#" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
+              {/* <a href="#" className="w-9 h-9 bg-gray-800 hover:bg-[#0ACF83] rounded-full flex items-center justify-center transition">
                 <Linkedin size={18} />
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -85,15 +88,15 @@ export default function Footer() {
             <div className="space-y-3 text-gray-400">
               <div className="flex items-start space-x-3">
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
-                <span>Av. Tecnología 123, Lima, Perú</span>
+                <span>Jr. Santo Toribio con 7 de Junio - Pichanaki, Junín, Perú</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone size={18} className="flex-shrink-0" />
-                <span>+51 999 999 999</span>
+                <span>+51 916 572 151</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={18} className="flex-shrink-0" />
-                <span>info@logitec.com</span>
+                <span>info@logitell.com</span>
               </div>
             </div>
           </div>
@@ -103,7 +106,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              &copy; {currentYear} LOGITEC. Todos los derechos reservados.
+              &copy; {currentYear} LOGITELL. Todos los derechos reservados.
             </p>
             <div className="flex space-x-6 text-sm text-gray-400">
               <a href="#" className="hover:text-[#0ACF83] transition">Política de Privacidad</a>
