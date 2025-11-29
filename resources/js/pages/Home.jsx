@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight, X, Calendar, User } from "lucide-react"
 import Header from "../components/Header"
 import WhatsAppButton from "../components/WhatsAppButton"
@@ -15,22 +15,30 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedPost, setSelectedPost] = useState(null)
   const autoplayRef = useRef(null)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
+  const touchStartTime = useRef(0)
+  const hasMoved = useRef(false)
+  const navigate = useNavigate()
 
   const slides = [
     {
       title: "Ofertas en Computadoras",
       description: "Hasta 30% de descuento en equipos seleccionados",
       image: "/modern-computers.jpg",
+      link: "/productos",
     },
     {
       title: "Nuevos Smartphones",
       description: "Los últimos modelos al mejor precio",
       image: "/modern-smartphones.png",
+      link: "/productos",
     },
     {
       title: "Seguridad Inteligente",
       description: "Cámaras de seguridad con tecnología avanzada",
       image: "/security-cameras.png",
+      link: "/productos",
     },
   ]
 
@@ -81,6 +89,51 @@ export default function Home() {
   const goToSlide = (index) => {
     setCurrentSlide(index)
     resetAutoplay()
+  }
+
+  const handleTouchStart = (e) => {
+    const touch = e.touches[0]
+    touchStartX.current = touch.clientX
+    touchStartY.current = touch.clientY
+    touchStartTime.current = Date.now()
+    hasMoved.current = false
+  }
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0]
+    const deltaX = touch.clientX - touchStartX.current
+    const deltaY = touch.clientY - touchStartY.current
+    if (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10) {
+      hasMoved.current = true
+    }
+  }
+
+  const handleTouchEnd = (link) => (e) => {
+    const touch = e.changedTouches[0]
+    const deltaX = touch.clientX - touchStartX.current
+    const deltaY = touch.clientY - touchStartY.current
+    const elapsed = Date.now() - touchStartTime.current
+    const swipeThreshold = 50
+    const verticalThreshold = 80
+
+    if (Math.abs(deltaX) > swipeThreshold && Math.abs(deltaY) < verticalThreshold) {
+      if (deltaX < 0) {
+        nextSlide()
+      } else {
+        prevSlide()
+      }
+      return
+    }
+
+    if (!hasMoved.current && Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10 && elapsed < 500 && link) {
+      navigate(link)
+    }
+  }
+
+  const handleSlideClick = (link) => {
+    if (link) {
+      navigate(link)
+    }
   }
 
   const ProductCard = ({ product }) => (
@@ -199,6 +252,10 @@ export default function Home() {
             className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd(slide.link)}
+            onClick={() => handleSlideClick(slide.link)}
           >
             <img
               src={slide.image || "/placeholder.svg"}
