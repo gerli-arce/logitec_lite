@@ -65,7 +65,6 @@ export default function AdminLogin() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   className="block w-full pl-10 pr-3 py-3 bg-zinc-950/50 border border-zinc-800 rounded-xl text-zinc-100 placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
-                  placeholder="admin@logitell.com"
                 />
               </div>
             </div>
