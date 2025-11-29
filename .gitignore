@@ -17,7 +17,7 @@ vendor/
 
 # Build
 dist/
-build/
+# build/
 
 # Laravel
 backend/bootstrap/cache/
