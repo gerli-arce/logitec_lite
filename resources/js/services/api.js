@@ -11,7 +11,9 @@ export const getImageUrl = (path) => {
   if (!path) return "/placeholder.svg"
   if (path.startsWith("http") || path.startsWith("data:")) return path
   const normalizedPath = path.startsWith("/") ? path : `/${path}`
-  return `${STORAGE_URL}${normalizedPath}`
+  // Encode to avoid breaking URLs when filenames have spaces or special chars
+  const safePath = encodeURI(normalizedPath)
+  return `${STORAGE_URL}${safePath}`
 }
 
 const apiClient = axios.create({

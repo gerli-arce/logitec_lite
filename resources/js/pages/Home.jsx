@@ -94,6 +94,11 @@ export default function Home() {
             src={getImageUrl(product.imagen_principal) || "/placeholder.svg"}
             alt={product.nombre}
             className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            onError={(e) => {
+              if (e.target.dataset.fallback) return
+              e.target.dataset.fallback = "true"
+              e.target.src = "/placeholder.svg"
+            }}
           />
         ) : (
           <img

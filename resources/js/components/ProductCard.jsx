@@ -29,6 +29,11 @@ export default function ProductCard({ product, onAddToCart, onWhatsApp }) {
             src={getImageUrl(product.imagen_principal)}
             alt={product.nombre}
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              if (e.currentTarget.dataset.fallback) return
+              e.currentTarget.dataset.fallback = "true"
+              e.currentTarget.src = "/placeholder.svg"
+            }}
           />
         ) : (
           <img
