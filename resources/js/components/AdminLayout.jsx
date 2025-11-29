@@ -28,7 +28,6 @@ export default function AdminLayout({ children }) {
               alt="LOGITELL"
               className={`${sidebarOpen ? 'h-10 w-auto' : 'h-10 w-10'} object-contain`}
             />
-            {sidebarOpen && <span className="font-bold">LOGITELL</span>}
           </div>
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-white">
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
