@@ -26,19 +26,19 @@ export default function Home() {
       title: "Ofertas en Computadoras",
       description: "Hasta 30% de descuento en equipos seleccionados",
       image: "/modern-computers.jpg",
-      link: "/productos",
+      link: "/productos?categoria=1",
     },
     {
       title: "Nuevos Smartphones",
       description: "Los últimos modelos al mejor precio",
       image: "/modern-smartphones.png",
-      link: "/productos",
+      link: "/productos?categoria=2",
     },
     {
       title: "Seguridad Inteligente",
       description: "Cámaras de seguridad con tecnología avanzada",
       image: "/security-cameras.png",
-      link: "/productos",
+      link: "/productos?categoria=3",
     },
   ]
 
