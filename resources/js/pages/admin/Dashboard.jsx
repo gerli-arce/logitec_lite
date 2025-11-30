@@ -17,16 +17,25 @@ export default function Dashboard() {
   }, [])
 
   const fetchStats = async () => {
+    const extractTotal = (payload) => {
+      if (!payload) return 0
+      if (typeof payload.total === "number") return payload.total
+      if (payload.meta?.total !== undefined) return payload.meta.total
+      if (Array.isArray(payload.data)) return payload.data.length
+      return 0
+    }
+
     try {
       const [products, categories, posts] = await Promise.all([
-        api.getProducts(),
-        api.getCategories(),
-        api.getPosts(),
+        api.getAdminProducts({ page: 1, per_page: 1 }),
+        api.getAdminCategories({ page: 1, per_page: 1 }),
+        api.getAdminPosts({ page: 1, per_page: 1 }),
       ])
+
       setStats({
-        products: products.data?.length || 0,
-        categories: categories.data?.length || 0,
-        posts: posts.data?.length || 0,
+        products: extractTotal(products),
+        categories: extractTotal(categories),
+        posts: extractTotal(posts),
       })
     } catch (error) {
       console.error('Failed to fetch stats:', error)
