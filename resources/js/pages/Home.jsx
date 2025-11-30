@@ -250,12 +250,13 @@ export default function Home() {
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentSlide ? "opacity-100" : "opacity-0"
+              index === currentSlide ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd(slide.link)}
             onClick={() => handleSlideClick(slide.link)}
+            aria-hidden={index !== currentSlide}
             role="button"
             tabIndex={0}
           >
