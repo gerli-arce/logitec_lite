@@ -124,14 +124,20 @@ export default function AdminBlog() {
     })
   }
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
+  const processFile = (file) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setFormData((prev) => ({ ...prev, imagen: reader.result }))
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0]
     if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setFormData({ ...formData, imagen: reader.result })
-      }
-      reader.readAsDataURL(file)
+      processFile(file)
+      e.target.value = ""
     }
   }
 
@@ -140,13 +146,23 @@ export default function AdminBlog() {
     for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf("image") !== -1) {
         const blob = items[i].getAsFile()
-        const reader = new FileReader()
-        reader.onloadend = () => {
-          setFormData({ ...formData, imagen: reader.result })
-        }
-        reader.readAsDataURL(blob)
+        processFile(blob)
+        e.preventDefault()
+        break
       }
     }
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    const file = e.dataTransfer.files?.[0]
+    if (file && file.type.startsWith("image/")) {
+      processFile(file)
+    }
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
   }
 
   return (
@@ -349,7 +365,11 @@ export default function AdminBlog() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">Imagen Principal</label>
-                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-[#0ACF83] transition-colors cursor-pointer relative bg-gray-50">
+                    <div
+                      className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-[#0ACF83] transition-colors cursor-pointer relative bg-gray-50"
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                    >
                       <div className="space-y-1 text-center">
                         {formData.imagen ? (
                           <div className="relative">
@@ -384,7 +404,7 @@ export default function AdminBlog() {
                                   type="file"
                                   className="sr-only"
                                   accept="image/*"
-                                  onChange={handleImageChange}
+                                  onChange={handleFileChange}
                                 />
                               </label>
                               <p className="pl-1">o arrastrar y soltar</p>
@@ -396,6 +416,13 @@ export default function AdminBlog() {
                           </>
                         )}
                       </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        onChange={handleFileChange}
+                        aria-label="Subir imagen"
+                      />
                     </div>
                   </div>
 
