@@ -133,6 +133,8 @@ export default function AdminProducts() {
   };
 
   const processFile = (file) => {
+    if (!file) return;
+
     const reader = new FileReader();
 
     reader.onloadend = () => {
@@ -142,6 +144,15 @@ export default function AdminProducts() {
     };
 
     reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      processFile(file);
+      e.target.value = "";
+    }
   };
 
   const handlePaste = (e) => {
@@ -639,7 +650,7 @@ export default function AdminProducts() {
                             type="file"
                             className="sr-only"
                             accept="image/*"
-                            onChange={processFile}
+                            onChange={handleFileChange}
                           />
                         </label>
 
@@ -660,7 +671,7 @@ export default function AdminProducts() {
                     type="file"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     accept="image/*"
-                    onChange={processFile}
+                    onChange={handleFileChange}
                   />
                 </div>
               </div>
